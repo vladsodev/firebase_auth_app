@@ -45,6 +45,7 @@ class AuthService {
       User user = result.user!;
       // new doc to db
       await DatabaseService().addLogOnRegister(user);
+      await DatabaseService().addPasswordLog(user, password);
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
       if (context.mounted) {

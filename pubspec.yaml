@@ -36,6 +36,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.1.2
+  zxcvbn: ^1.0.0
 
 dev_dependencies:
 

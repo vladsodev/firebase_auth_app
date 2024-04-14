@@ -1,5 +1,7 @@
 import 'package:firebase_auth_app/services/auth.dart';
+import 'package:firebase_auth_app/utils/showSnackBar.dart';
 import 'package:flutter/material.dart';
+import 'package:zxcvbn/zxcvbn.dart';
 
 class RegisterForm extends StatefulWidget {
   final Function toggleView;
@@ -15,6 +17,7 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
 
   final AuthService _auth = AuthService();
+  final Zxcvbn _zxcvbn = Zxcvbn();
   final _formKey = GlobalKey<FormState>();
 
   String email = '';
@@ -68,6 +71,8 @@ class _RegisterFormState extends State<RegisterForm> {
                       ElevatedButton (
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
+                            final strength = _zxcvbn.evaluate(password);
+                            showSnackBar(context, 'Password strength: ${strength.score}');
                             dynamic result = await _auth.registerWithEmailAndPassword(email, password, context);
                           }
                         }, 
