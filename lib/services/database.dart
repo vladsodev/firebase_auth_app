@@ -6,27 +6,28 @@ import 'package:zxcvbn/zxcvbn.dart';
 
 class DatabaseService {
 
-  final CollectionReference singInLogs = FirebaseFirestore.instance.collection('sign_in_logs');
+  final db = FirebaseFirestore.instance;
+  final CollectionReference signInLogs = FirebaseFirestore.instance.collection('sign_in_logs');
   final CollectionReference passwordLogs = FirebaseFirestore.instance.collection('password_logs');
 
   final logDocuments = FirebaseFirestore.instance.collection('sign_in_logs').snapshots();
 
   Future addLogOnSignIn(User user) async {
-    await singInLogs.doc(DateTime.now().toString()).set({
+    await signInLogs.doc(DateTime.now().toString()).set({
       'timestamp': FieldValue.serverTimestamp(),
       'message': cypher.encrypt('${user.email} signed in')
     });
   }
 
   Future addLogOnRegister(User user) async {
-    await singInLogs.doc(DateTime.now().toString()).set({
+    await signInLogs.doc(DateTime.now().toString()).set({
       'timestamp': FieldValue.serverTimestamp(),
       'message': cypher.encrypt('${user.email} registered')
     });
   }
 
   Future addLogOnAnonymous(User user) async {
-    await singInLogs.doc(DateTime.now().toString()).set({
+    await signInLogs.doc(DateTime.now().toString()).set({
       'timestamp': FieldValue.serverTimestamp(),
       'message': cypher.encrypt('Anonymous user ${user.uid} signed in')
     });
@@ -52,12 +53,21 @@ class DatabaseService {
     }).toList();
   }
 
+  
   // get logs stream
 
-  Stream<List<Log>> get logs {
-    return singInLogs.snapshots()
+
+  Stream<List<Log>> get signInLogsList {
+    return signInLogs.snapshots()
       .map(_logListFromSnapshot);
   }
+
+
+  Stream<List<Log>> get passwordLogList {
+    return passwordLogs.snapshots()
+      .map(_logListFromSnapshot);
+  }
+
 
 }
 

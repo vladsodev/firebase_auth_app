@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_app/models/log.dart';
 import 'package:firebase_auth_app/screens/home/log_list.dart';
+import 'package:firebase_auth_app/screens/home/log_screens/password_logs.dart';
+import 'package:firebase_auth_app/screens/home/log_screens/sign_in_logs.dart';
 import 'package:firebase_auth_app/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,27 +21,66 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Log>?>.value(
-      initialData: null,
-      value: DatabaseService().logs,
-      catchError: (context, error) {
-        return null;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-          actions: [
-            TextButton.icon(
-              onPressed: () async {
-                await _auth.signOut(context);
-              }, 
-              icon: const Icon(Icons.person_2, color: Colors.white), 
-              label: const Text('Logout')
-            )
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home'),
+        actions: [
+          TextButton.icon(
+            onPressed: () async {
+              await _auth.signOut(context);
+            }, 
+            icon: const Icon(Icons.person_2, color: Colors.white), 
+            label: const Text('Logout')
+          )
+        ],
+      ),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              const Text(
+                'Welcome to Admin Panel',
+                style: TextStyle(fontSize: 20),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => StreamProvider.value(
+                        initialData: null,
+                        catchError: (context, error) => null,
+                        value: DatabaseService().signInLogsList,
+                        child: const SignInLogs(),
+                      ),
+                    )
+                  );
+                },
+                child: const Text('View sign in logs'),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => StreamProvider.value(
+                        initialData: null,
+                        catchError: (context, error) => null,
+                        value: DatabaseService().passwordLogList,
+                        child: const PasswordLogs(),
+                      ),
+                    )
+                  );
+                },
+                child: const Text('Password logs'),
+              ),
+              const SizedBox(height: 20),
+            ]
+          ),
         ),
-        body: const LogList(),
       ),
     );
   }
 }
+

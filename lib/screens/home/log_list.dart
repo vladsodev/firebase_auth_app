@@ -18,7 +18,7 @@ class _LogListState extends State<LogList> {
   @override
   Widget build(BuildContext context) {
 
-    final logs = Provider.of<List<Log>?>(context) ;
+    final logs = Provider.of<List<Log>?>(context);
 
     if (logs != null) {
 
