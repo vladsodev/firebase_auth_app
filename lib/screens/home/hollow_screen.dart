@@ -16,7 +16,7 @@ class _HollowScrenState extends State<HollowScren> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Home'),
+          title: const Text('User screen'),
           actions: [
             TextButton.icon(
               onPressed: () async {
@@ -33,7 +33,7 @@ class _HollowScrenState extends State<HollowScren> {
           children: [
             Text("Sorry, but you're not an admin"),
             SizedBox(height: 20),
-            Icon(Icons.admin_panel_settings, size: 100),
+            Icon(Icons.mood_bad, size: 100),
           ]
         ),
       ),

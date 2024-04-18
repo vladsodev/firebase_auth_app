@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Admin Panel'),
         actions: [
           TextButton.icon(
             onPressed: () async {
@@ -44,6 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 20),
+              const Icon(Icons.admin_panel_settings_sharp, size: 100),
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).push(
@@ -57,7 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   );
                 },
-                child: const Text('View sign in logs'),
+                style: const ButtonStyle(
+                  fixedSize: MaterialStatePropertyAll(
+                    Size(200, 50),
+                  ),
+                ),
+                child: const Text('Sign in logs'),
               ),
               const SizedBox(height: 20),
               TextButton(
@@ -73,6 +80,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   );
                 },
+                style: const ButtonStyle(
+                  fixedSize: MaterialStatePropertyAll(
+                    Size(200, 50),
+                  ),
+                ),
                 child: const Text('Password logs'),
               ),
               const SizedBox(height: 20),

@@ -50,6 +50,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   child: Column(
                     children: [
                       TextFormField(
+                        decoration: const InputDecoration(labelText: 'Email'),
                         validator: (value) => value!.isEmpty ? 'Enter an email' : null,
                         onChanged: (value) {
                           setState(() {
@@ -59,6 +60,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
+                        decoration: const InputDecoration(labelText: 'Password'),
                         validator: (value) => value!.length < 6 ? 'Enter a password 6+ chars long' : null,
                         obscureText: true,
                         onChanged: (value) {
