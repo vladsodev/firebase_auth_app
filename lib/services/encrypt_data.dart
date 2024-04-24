@@ -8,12 +8,34 @@ class EncryptData {
   static final encrypter = Encrypter(AES(key));
 
   String encrypt(String plainText) {
+
+    Stopwatch stopwatch = Stopwatch();
+    // Запуск стопwachа
+    stopwatch.start();
+
     final encrypted = encrypter.encrypt(plainText, iv: iv);
+    // Остановка стопwachа
+    stopwatch.stop();
+
+    // Получение времени выполнения в миллисекундах
+    int elapsedMilliseconds = stopwatch.elapsedMilliseconds;
+
+    print('Время выполнения функции шифрования: $elapsedMilliseconds миллисекунд');
     return encrypted.base64;
   }
 
   String decrypt(String encryptedText) {
+    Stopwatch stopwatch = Stopwatch();
+    // Запуск стопwachа
+    stopwatch.start();
     final decrypted = encrypter.decrypt64(encryptedText, iv: iv);
+    // Остановка стопwachа
+    stopwatch.stop();
+
+    // Получение времени выполнения в миллисекундах
+    int elapsedMilliseconds = stopwatch.elapsedMilliseconds;
+
+    print('Время выполнения функции дешифрования: $elapsedMilliseconds миллисекунд');
     return decrypted;
   }
 

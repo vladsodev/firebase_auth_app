@@ -61,7 +61,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       const SizedBox(height: 20),
                       TextFormField(
                         decoration: const InputDecoration(labelText: 'Password'),
-                        validator: (value) => value!.length < 6 ? 'Enter a password 6+ chars long' : null,
+                        validator: (value) => value!.length < 8 ? 'Enter a password 8+ chars long' : null,
                         obscureText: true,
                         onChanged: (value) {
                           setState(() {
