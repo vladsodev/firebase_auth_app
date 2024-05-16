@@ -20,26 +20,36 @@ class _LogListState extends State<LogList> {
 
     final logs = Provider.of<List<Log>?>(context);
 
+
     if (logs != null) {
 
-    return SafeArea(
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              itemCount: logs.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(logs[index].timeStamp!.toDate().toString()),
-                  subtitle: Text(cypher.decrypt(logs[index].message!)),
-                );
-              }
-            ),
-          )
-        ],
-      )
-    );
+      final decryptedLogs = logs.map((log) => Log(
+        timeStamp: log.timeStamp,
+        message: cypher.decrypt(log.message!)
+      )).toList();
+      
+      List<Map<DateTime, String>> logMaps = decryptedLogs.map((log) {
+        return {log.timeStamp!.toDate(): log.message!};
+      }).toList();
+
+      return SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: logs.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(logs[index].timeStamp!.toDate().toString()),
+                    subtitle: Text(cypher.decrypt(logs[index].message!)),
+                  );
+                }
+              ),
+            )
+          ],
+        )
+      );
     } else {
       return const Center(child: CircularProgressIndicator());
     }

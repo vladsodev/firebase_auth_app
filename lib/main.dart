@@ -16,10 +16,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   
-  if (Platform.isWindows) {
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     await windowManager.ensureInitialized();
-    WindowManager.instance.setMinimumSize(const Size(400, 600));
-    WindowManager.instance.setMaximumSize(const Size(400, 600));
+    WindowManager.instance.setMinimumSize(const Size(400, 670));
+    WindowManager.instance.setMaximumSize(const Size(400, 670));
   }
   runApp(const MyApp());
 }

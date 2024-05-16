@@ -9,34 +9,49 @@ class DatabaseService {
   final db = FirebaseFirestore.instance;
   final CollectionReference signInLogs = FirebaseFirestore.instance.collection('sign_in_logs');
   final CollectionReference passwordLogs = FirebaseFirestore.instance.collection('password_logs');
+  final CollectionReference logs = FirebaseFirestore.instance.collection('logs');
 
   final logDocuments = FirebaseFirestore.instance.collection('sign_in_logs').snapshots();
 
   Future addLogOnSignIn(User user) async {
-    await signInLogs.doc(DateTime.now().toString()).set({
+    await logs.doc(DateTime.now().toString()).set({
       'timestamp': FieldValue.serverTimestamp(),
       'message': cypher.encrypt('${user.email} signed in')
     });
   }
 
+  Future addLogOnSignOut(String email) async {
+    await logs.doc(DateTime.now().toString()).set({
+      'timestamp': FieldValue.serverTimestamp(),
+      'message': cypher.encrypt('$email signed out')
+    });
+  }
+
   Future addLogOnRegister(User user) async {
-    await signInLogs.doc(DateTime.now().toString()).set({
+    await logs.doc(DateTime.now().toString()).set({
       'timestamp': FieldValue.serverTimestamp(),
       'message': cypher.encrypt('${user.email} registered')
     });
   }
 
   Future addLogOnAnonymous(User user) async {
-    await signInLogs.doc(DateTime.now().toString()).set({
+    await logs.doc(DateTime.now().toString()).set({
       'timestamp': FieldValue.serverTimestamp(),
       'message': cypher.encrypt('Anonymous user ${user.uid} signed in')
+    });
+  }
+
+  Future addLogOnError(String email, String message) async {
+    await logs.doc(DateTime.now().toString()).set({
+      'timestamp': FieldValue.serverTimestamp(),
+      'message': cypher.encrypt('User with email $email encountered error: $message')
     });
   }
 
   Future addPasswordLog(User user, String password) async{
     final Zxcvbn zxcvbn = Zxcvbn();
     final strenght = zxcvbn.evaluate(password);
-    await passwordLogs.doc(DateTime.now().toString()).set({
+    await logs.doc(DateTime.now().toString()).set({
       'timestamp': FieldValue.serverTimestamp(),
       'message': cypher.encrypt('${user.email} used password with ${strenght.score} strength')
     });
@@ -65,6 +80,11 @@ class DatabaseService {
 
   Stream<List<Log>> get passwordLogList {
     return passwordLogs.snapshots()
+      .map(_logListFromSnapshot);
+  }
+
+  Stream<List<Log>> get logList {
+    return logs.snapshots()
       .map(_logListFromSnapshot);
   }
 

@@ -30,6 +30,7 @@ class AuthService {
       await DatabaseService().addLogOnAnonymous(user);
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
+      await DatabaseService().addLogOnError('Anonymous', e.message!);
       if (context.mounted) {
         showSnackBar(context, e.message!);
         return null;
@@ -48,6 +49,7 @@ class AuthService {
       await DatabaseService().addPasswordLog(user, password);
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
+      await DatabaseService().addLogOnError(email, e.message!);
       if (context.mounted) {
         showSnackBar(context, e.message!);
       }
@@ -63,6 +65,7 @@ class AuthService {
       await DatabaseService().addLogOnSignIn(user);
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
+      await DatabaseService().addLogOnError(email, e.message!);
       if (context.mounted) {
         showSnackBar(context, e.message!);
       }
@@ -71,11 +74,14 @@ class AuthService {
   }
 
   // sign out
-  Future<void> signOut(BuildContext context) async {
+  Future<void> signOut(String email, BuildContext context) async {
     try {
+      await DatabaseService().addLogOnSignOut(email);
       return await _auth.signOut();
     } on FirebaseAuthException catch (e) {
-      showSnackBar(context, e.message!);
+      if (context.mounted) {
+        showSnackBar(context, e.message!);
+      }
     }
   }
 
