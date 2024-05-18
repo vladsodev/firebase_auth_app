@@ -10,6 +10,8 @@ class DatabaseService {
   final CollectionReference signInLogs = FirebaseFirestore.instance.collection('sign_in_logs');
   final CollectionReference passwordLogs = FirebaseFirestore.instance.collection('password_logs');
   final CollectionReference logs = FirebaseFirestore.instance.collection('logs');
+  final CollectionReference drinks = FirebaseFirestore.instance.collection('drinks').doc('drink_collection').collection('drinks');
+  final CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   final logDocuments = FirebaseFirestore.instance.collection('sign_in_logs').snapshots();
 
@@ -88,6 +90,37 @@ class DatabaseService {
       .map(_logListFromSnapshot);
   }
 
+  Stream<List<Map<String, dynamic>>> get drinksList {
+    return drinks.snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map((doc) {
+          return {
+            'id': doc['id'],
+            'name': doc['name'],
+            'description': doc['description'],
+            'price': doc['price'],
+            'cold': doc['cold'],        
+            'milky': doc['milky'],
+            'sweet': doc['sweet'],
+            'sour': doc['sour'],
+            'strength': doc['strength'],
+          };
+        }).toList()
+      );
+  }
+  
 
+  Stream<List<Map<String, dynamic>>> drinkHistory(String uid) {
+    final snapshot = users.doc(uid).collection('history').snapshots();
+    return snapshot.map(
+      (event) => event.docs.map((doc) {
+      return {
+        'id': doc['id'],
+        'name': doc['name'],
+        'timestamp': doc['timestamp'],
+      }; 
+    }).toList()
+    );
+  }
 }
 

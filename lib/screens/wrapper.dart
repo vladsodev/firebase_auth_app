@@ -4,6 +4,7 @@ import 'package:firebase_auth_app/screens/home/hollow_screen.dart';
 import 'package:firebase_auth_app/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth_app/services/database.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({super.key});

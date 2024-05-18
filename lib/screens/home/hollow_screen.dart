@@ -1,5 +1,8 @@
 import 'package:firebase_auth_app/models/user.dart';
+import 'package:firebase_auth_app/screens/home/user_screens/coffee_history.dart';
+import 'package:firebase_auth_app/screens/home/user_screens/coffee_screen.dart';
 import 'package:firebase_auth_app/services/auth.dart';
+import 'package:firebase_auth_app/services/database.dart';
 import 'package:firebase_auth_app/services/firebase_auth_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +22,27 @@ class _HollowScrenState extends State<HollowScren> {
     final user = Provider.of<MyUser?>(context);
     return Scaffold(
       appBar: AppBar(
-          title: const Text('User screen'),
+          title: const Text('Welcome!'),
           actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => StreamProvider<List<Map<String, dynamic>>?>.value(
+                        initialData: null,
+                        catchError: (context, error) => null,
+                        value: DatabaseService().drinkHistory(user!.uid),
+                        child: const CoffeeHistory(),
+                      ),
+                    )
+                  );
+              }, 
+              child: const Text('View History')
+            ),
             TextButton.icon(
               onPressed: () async {
                 if (user != null) {
-                  user.email == '' ? await _auth.signOut('Anonynous user ${user.uid}', context) : await _auth.signOut(user.email!, context);
+                  user.email == '' ? await _auth.signOut('Anonymous user ${user.uid}', context) : await _auth.signOut(user.email!, context);
                 }
               }, 
               icon: const Icon(Icons.person_2, color: Colors.white), 
@@ -32,15 +50,11 @@ class _HollowScrenState extends State<HollowScren> {
             )
           ],
         ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Sorry, but you're not an admin"),
-            SizedBox(height: 20),
-            Icon(Icons.mood_bad, size: 100),
-          ]
-        ),
+      body: StreamProvider.value(
+        value: DatabaseService().drinksList, 
+        initialData: null,
+        child: const ProductFilterPage(),
+        catchError: (context, error) => null,
       ),
     );
   }

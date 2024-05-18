@@ -4,5 +4,5 @@ class MyUser {
   MyUser({
     required this.uid,
     this.email
-    });
+  });
 }

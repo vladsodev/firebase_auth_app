@@ -74,48 +74,48 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const Text('View logs'),
               ),
               const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => StreamProvider.value(
-                        initialData: null,
-                        catchError: (context, error) => null,
-                        value: DatabaseService().signInLogsList,
-                        child: const SignInLogs(),
-                      ),
-                    )
-                  );
-                },
-                style: const ButtonStyle(
-                  fixedSize: MaterialStatePropertyAll(
-                    Size(200, 50),
-                  ),
-                ),
-                child: const Text('Sign in logs'),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => StreamProvider.value(
-                        initialData: null,
-                        catchError: (context, error) => null,
-                        value: DatabaseService().passwordLogList,
-                        child: const PasswordLogs(),
-                      ),
-                    )
-                  );
-                },
-                style: const ButtonStyle(
-                  fixedSize: MaterialStatePropertyAll(
-                    Size(200, 50),
-                  ),
-                ),
-                child: const Text('Password logs'),
-              ),
-              const SizedBox(height: 20),
+              // TextButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //         builder: (context) => StreamProvider.value(
+              //           initialData: null,
+              //           catchError: (context, error) => null,
+              //           value: DatabaseService().signInLogsList,
+              //           child: const SignInLogs(),
+              //         ),
+              //       )
+              //     );
+              //   },
+              //   style: const ButtonStyle(
+              //     fixedSize: MaterialStatePropertyAll(
+              //       Size(200, 50),
+              //     ),
+              //   ),
+              //   child: const Text('Sign in logs'),
+              // ),
+              // const SizedBox(height: 20),
+              // TextButton(
+              //   onPressed: () {
+              //     Navigator.of(context).push(
+              //       MaterialPageRoute(
+              //         builder: (context) => StreamProvider.value(
+              //           initialData: null,
+              //           catchError: (context, error) => null,
+              //           value: DatabaseService().passwordLogList,
+              //           child: const PasswordLogs(),
+              //         ),
+              //       )
+              //     );
+              //   },
+              //   style: const ButtonStyle(
+              //     fixedSize: MaterialStatePropertyAll(
+              //       Size(200, 50),
+              //     ),
+              //   ),
+              //   child: const Text('Password logs'),
+              // ),
+              // const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).push(

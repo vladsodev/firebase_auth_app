@@ -47,6 +47,7 @@ class AuthService {
       // new doc to db
       await DatabaseService().addLogOnRegister(user);
       await DatabaseService().addPasswordLog(user, password);
+      await DatabaseService().db.collection('users').doc(user.uid).set({'email': user.email});
       return _userFromFirebaseUser(user);
     } on FirebaseAuthException catch (e) {
       await DatabaseService().addLogOnError(email, e.message!);
