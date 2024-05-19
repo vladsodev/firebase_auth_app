@@ -4,6 +4,7 @@ import 'package:firebase_auth_app/screens/home/user_screens/coffee_screen.dart';
 import 'package:firebase_auth_app/services/auth.dart';
 import 'package:firebase_auth_app/services/database.dart';
 import 'package:firebase_auth_app/services/firebase_auth_methods.dart';
+import 'package:firebase_auth_app/utils/product_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 class HollowScren extends StatefulWidget {
@@ -52,7 +53,7 @@ class _HollowScrenState extends State<HollowScren> {
         ),
       body: StreamProvider.value(
         value: DatabaseService().drinksList, 
-        initialData: null,
+        initialData: products,
         child: const ProductFilterPage(),
         catchError: (context, error) => null,
       ),

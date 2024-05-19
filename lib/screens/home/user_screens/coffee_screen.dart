@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_app/models/user.dart';
 import 'package:firebase_auth_app/services/database.dart';
+import 'package:firebase_auth_app/utils/showSnackBar.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -65,7 +66,7 @@ class _ProductFilterPageState extends State<ProductFilterPage> {
     });
   }
 
-
+  
 
   
 
@@ -85,11 +86,22 @@ class _ProductFilterPageState extends State<ProductFilterPage> {
         selectedProduct = null;
       });
     }
-    await DatabaseService().db.collection('users').doc(user!.uid).collection('history').doc(DateTime.now().toString()).set({
-      'id': selectedProduct!['id'],
-      'name' : selectedProduct!['name'],
-      'timestamp': FieldValue.serverTimestamp(),
-    });
+    // await DatabaseService().db.collection('users').doc(user!.uid).collection('history').doc(DateTime.now().toString()).set({
+    //   'id': selectedProduct!['id'],
+    //   'name' : selectedProduct!['name'],
+    //   'timestamp': DateTime.now().toString(),
+    // });
+    }
+    void like() async {
+      if (selectedProduct == null || user == null || user.email == '') {
+        showSnackBar(context, 'First you need to find your drink!');
+        return;
+      }
+      await DatabaseService().db.collection('users').doc(user.uid).collection('history').doc(DateTime.now().toString()).set({
+        'id': selectedProduct!['id'],
+        'name' : selectedProduct!['name'],
+        'timestamp': DateTime.now().toString(),
+      });
     }
 
     return Scaffold(
@@ -181,17 +193,26 @@ class _ProductFilterPageState extends State<ProductFilterPage> {
           else
             const Text('No products found'),
           // Show all filtered products button
-          ElevatedButton(
-            onPressed: () {
-              filterProducts();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FilteredProductsPage(filteredProducts: filteredProducts),
-                ),
-              );
-            },
-            child: const Text('Show all matching products'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  filterProducts();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FilteredProductsPage(filteredProducts: filteredProducts),
+                    ),
+                  );
+                },
+                child: const Text('Show all matching products'),
+              ),
+              ElevatedButton.icon(
+                onPressed: like, 
+                icon: const Icon(Icons.favorite), 
+                label: const Text('Like'))
+            ],
           ),
         ],
       ),

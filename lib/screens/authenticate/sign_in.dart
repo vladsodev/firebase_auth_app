@@ -26,11 +26,11 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign in to V-points'),
+        title: const Text('Sign in to V-coffee'),
         actions: [
           TextButton.icon(
-            icon: const Icon(Icons.person_2, color: Colors.white),
-            label: const Text('Register', style: TextStyle(color: Colors.white)),
+            icon: const Icon(Icons.person_2),
+            label: const Text('Register'),
             onPressed: () {
               widget.toggleView();
             }

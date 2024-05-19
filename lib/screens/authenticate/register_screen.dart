@@ -27,11 +27,11 @@ class _RegisterFormState extends State<RegisterForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign in to V-points'),
+        title: const Text('Sign in to V-coffee'),
         actions: [
           TextButton.icon(
-            icon: const Icon(Icons.person_2, color: Colors.white),
-            label: const Text('Sign in', style: TextStyle(color: Colors.white)),
+            icon: const Icon(Icons.person_2),
+            label: const Text('Sign in'),
             onPressed: () {
               widget.toggleView();
             }

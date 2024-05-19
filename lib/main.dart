@@ -4,7 +4,6 @@ import 'package:firebase_auth_app/firebase_options.dart';
 import 'package:firebase_auth_app/models/user.dart';
 import 'package:firebase_auth_app/screens/wrapper.dart';
 import 'package:firebase_auth_app/services/auth.dart';
-import 'package:firebase_auth_app/utils/product_list.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
