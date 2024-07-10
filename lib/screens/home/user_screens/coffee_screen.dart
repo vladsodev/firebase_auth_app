@@ -86,22 +86,14 @@ class _ProductFilterPageState extends State<ProductFilterPage> {
         selectedProduct = null;
       });
     }
-    // await DatabaseService().db.collection('users').doc(user!.uid).collection('history').doc(DateTime.now().toString()).set({
-    //   'id': selectedProduct!['id'],
-    //   'name' : selectedProduct!['name'],
-    //   'timestamp': DateTime.now().toString(),
-    // });
     }
     void like() async {
       if (selectedProduct == null || user == null || user.email == '') {
         showSnackBar(context, 'First you need to find your drink!');
         return;
       }
-      await DatabaseService().db.collection('users').doc(user.uid).collection('history').doc(DateTime.now().toString()).set({
-        'id': selectedProduct!['id'],
-        'name' : selectedProduct!['name'],
-        'timestamp': DateTime.now().toString(),
-      });
+      DatabaseService().addDrinkToHistory(user.uid, selectedProduct!);
+      showSnackBar(context, 'Added to history!');
     }
 
     return Scaffold(

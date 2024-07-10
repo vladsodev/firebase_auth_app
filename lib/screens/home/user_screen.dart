@@ -25,7 +25,7 @@ class _HollowScrenState extends State<HollowScren> {
       appBar: AppBar(
           title: const Text('Welcome!'),
           actions: [
-            TextButton(
+            TextButton.icon(
               onPressed: () {
                 Navigator.of(context).push(
                     MaterialPageRoute(
@@ -38,7 +38,8 @@ class _HollowScrenState extends State<HollowScren> {
                     )
                   );
               }, 
-              child: const Text('View History')
+              label: const Text('View History'),
+              icon: const Icon(Icons.history),
             ),
             TextButton.icon(
               onPressed: () async {
@@ -46,13 +47,13 @@ class _HollowScrenState extends State<HollowScren> {
                   user.email == '' ? await _auth.signOut('Anonymous user ${user.uid}', context) : await _auth.signOut(user.email!, context);
                 }
               }, 
-              icon: const Icon(Icons.person_2, color: Colors.white), 
+              icon: const Icon(Icons.person_2), 
               label: const Text('Logout')
             )
           ],
         ),
       body: StreamProvider.value(
-        value: DatabaseService().drinksList, 
+        value: DatabaseService().rotationList, 
         initialData: products,
         child: const ProductFilterPage(),
         catchError: (context, error) => null,

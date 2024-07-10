@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_app/models/log.dart';
 import 'package:firebase_auth_app/models/user.dart';
+import 'package:firebase_auth_app/screens/home/admin/menu_management/drink_collection_screen.dart';
+import 'package:firebase_auth_app/screens/home/admin/menu_management/rotation_screen.dart';
 import 'package:firebase_auth_app/screens/home/log_list.dart';
 import 'package:firebase_auth_app/screens/home/log_screens/logparsing.dart';
 import 'package:firebase_auth_app/screens/home/log_screens/password_logs.dart';
@@ -151,6 +153,48 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 child: const Text('Parse logs'),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => StreamProvider<List<Map<String, dynamic>>?>.value(
+                        initialData: null,
+                        catchError: (context, error) => null,
+                        value: DatabaseService().drinksList,
+                        child: const DrinkScreen(),
+                      ),
+                    )
+                  );
+                },
+                style: const ButtonStyle(
+                  fixedSize: MaterialStatePropertyAll(
+                    Size(200, 50),
+                  ),
+                ),
+                child: const Text('Menu'),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => StreamProvider.value(
+                        initialData: null,
+                        catchError: (context, error) => null,
+                        value: DatabaseService().rotationList,
+                        child: const RotationScreen(),
+                      ),
+                    )
+                  );
+                },
+                style: const ButtonStyle(
+                  fixedSize: MaterialStatePropertyAll(
+                    Size(200, 50),
+                  ),
+                ),
+                child: const Text('Rotation'),
               ),
             ]
           ),

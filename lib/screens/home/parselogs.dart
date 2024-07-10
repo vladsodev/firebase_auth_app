@@ -25,6 +25,7 @@ class _ParseLogsState extends State<ParseLogs> {
     r'\bsigned out\b',
     r'\bpassword\b',
     r'\bregistered\b',
+    r'\berror\b',
   ];
   late String dropDownValue;
   late List<DropdownMenuItem<String>> items;

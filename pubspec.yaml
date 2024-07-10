@@ -36,6 +36,7 @@ dependencies:
   firebase_core: ^2.29.0
   flutter:
     sdk: flutter
+  http: ^1.2.1
   provider: ^6.1.2
   window_manager: ^0.3.8
   zxcvbn: ^1.0.0
