@@ -54,7 +54,7 @@ class RegexText extends StatelessWidget {
         textSpans.add(
           TextSpan(
             text: text.substring(lastMatchEnd, match.start),
-            //style: const TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
         );
       }
@@ -78,7 +78,7 @@ class RegexText extends StatelessWidget {
       textSpans.add(
         TextSpan(
           text: text.substring(lastMatchEnd),
-          //style: const TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
         ),
       );
     }
@@ -216,7 +216,7 @@ List<TextSpan> highlightMatches(String text, RegExp regex) {
         textSpans.add(
           TextSpan(
             text: text.substring(lastMatchEnd, match.start),
-            //style: const TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
           ),
         );
       }
@@ -240,7 +240,7 @@ List<TextSpan> highlightMatches(String text, RegExp regex) {
       textSpans.add(
         TextSpan(
           text: text.substring(lastMatchEnd),
-          //style: const TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
         ),
       );
     }
