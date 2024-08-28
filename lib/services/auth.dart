@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_app/models/user.dart';
 import 'package:firebase_auth_app/services/database.dart';
-import 'package:firebase_auth_app/utils/showSnackBar.dart';
+import 'package:firebase_auth_app/utils/show_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth_app/services/encrypt_data.dart';
 // import 'package:http/http.dart' as http;
@@ -98,4 +98,13 @@ class AuthService {
     }
   }
 
+}
+
+
+class AuthRepository {
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
+  AuthRepository({required FirebaseFirestore firestore, required FirebaseAuth auth})
+    : _firestore = firestore,
+      _auth = auth;
 }

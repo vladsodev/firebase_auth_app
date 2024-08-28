@@ -1,5 +1,5 @@
 import 'package:firebase_auth_app/services/auth.dart';
-import 'package:firebase_auth_app/utils/showSnackBar.dart';
+import 'package:firebase_auth_app/utils/show_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:zxcvbn/zxcvbn.dart';
 

@@ -1,17 +1,16 @@
-import 'dart:io';
+import 'package:firebase_auth_app/core/providers/firebase_providers.dart';
+import 'package:firebase_auth_app/screens/home/user_screens/home_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth_app/firebase_options.dart';
 import 'package:firebase_auth_app/models/user.dart';
 import 'package:firebase_auth_app/screens/wrapper.dart';
 import 'package:firebase_auth_app/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:http/http.dart' as http;
 
-// Future sendAccessLog() async {
-//     await http.post(Uri.parse('http://127.0.0.1/access_to_app/'));
-// }
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,28 +24,53 @@ void main() async {
   //   WindowManager.instance.setTitle('V-Coffee');
   // }
 
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
+//   @override
+//   Widget build(BuildContext context) {
+//     return StreamProvider<MyUser?>.value(
+//       catchError: (context, error) => null,
+//       initialData: null,
+//       value: AuthService().user,
+//       child: MaterialApp(
+//         debugShowCheckedModeBanner: false,
+//         theme: ThemeData(
+//           colorScheme: ColorScheme.fromSeed(
+//             seedColor: const Color.fromRGBO(208, 19, 54, 1),
+//             primary: const Color.fromRGBO(208, 19, 54, 1),
+//           ),
+//         ),
+//         title: 'V-Coffee',
+//         home: const Wrapper(),
+//       ),
+//     );
+//   }
+// }
+
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<MyUser?>.value(
-      catchError: (context, error) => null,
-      initialData: null,
-      value: AuthService().user,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromRGBO(208, 19, 54, 1),
-            primary: const Color.fromRGBO(208, 19, 54, 1),
-          ),
-        ),
-        title: 'V-Coffee',
-        home: const Wrapper(),
+    return MaterialApp(
+      home: Consumer(
+        builder: (context, ref, _) {
+          final authState = ref.watch(authStateProvider);
+
+          return authState.when(
+            data: (user) {
+              if (user != null) {
+                return const HomeScreen();  // Экран основного приложения
+              } else {
+                return SignInScreen();  // Экран входа
+              }
+            },
+            loading: () => const CircularProgressIndicator(),
+            error: (e, stack) => Text('Error: $e'),
+          );
+        },
       ),
     );
   }

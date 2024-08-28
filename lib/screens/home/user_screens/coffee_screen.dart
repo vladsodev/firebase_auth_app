@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_app/models/user.dart';
 import 'package:firebase_auth_app/services/database.dart';
-import 'package:firebase_auth_app/utils/showSnackBar.dart';
+import 'package:firebase_auth_app/utils/show_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 

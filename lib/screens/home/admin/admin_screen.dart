@@ -11,18 +11,17 @@ import 'package:firebase_auth_app/screens/home/parselogs.dart';
 import 'package:firebase_auth_app/services/auth.dart';
 import 'package:firebase_auth_app/services/regexp.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_auth_app/services/database.dart';
 
-class HomeScreen extends StatefulWidget {
+class AdminScreen extends StatefulWidget {
 
-  const HomeScreen({super.key});
+  const AdminScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<AdminScreen> createState() => _AdminScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _AdminScreenState extends State<AdminScreen> {
   final AuthService _auth = AuthService();
   
   @override
