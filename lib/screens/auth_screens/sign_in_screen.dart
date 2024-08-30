@@ -33,7 +33,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             icon: const Icon(Icons.person_2),
             label: const Text('Sign Up'),
             onPressed: () {
-              Routemaster.of(context).push('/signup');
+              Routemaster.of(context).push('/register');
             }
           )
         ],
@@ -70,7 +70,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      SignInButton(email: email, password: password)
+                      SignInButton(email: email, password: password),
+                      const SizedBox(height: 20),
+                      const Text('or'),
+                      const SizedBox(height: 20),
+                      const SignInAnonButton(),
                     ]
                   )
                 ),

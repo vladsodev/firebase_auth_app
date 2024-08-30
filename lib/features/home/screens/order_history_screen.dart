@@ -3,60 +3,29 @@ import 'package:firebase_auth_app/core/common/image_urls.dart';
 import 'package:firebase_auth_app/core/common/loader.dart';
 import 'package:firebase_auth_app/core/common/product_card.dart';
 import 'package:firebase_auth_app/core/common/product_detail.dart';
-import 'package:firebase_auth_app/core/common/sign_in_buttons.dart';
 import 'package:firebase_auth_app/features/auth/controller/auth_controller.dart';
 import 'package:firebase_auth_app/features/home/drawers/menu_drawer.dart';
-import 'package:firebase_auth_app/features/home/drawers/profile_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:routemaster/routemaster.dart';
 
-
-
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+class OrderHistory extends ConsumerStatefulWidget {
+  const OrderHistory({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _OrderHistoryState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-
-  void displayDrawer(BuildContext context) {
-    Scaffold.of(context).openDrawer();
-  }
-
-  void displayEndDrawer(BuildContext context) {
-    Scaffold.of(context).openEndDrawer();
-  }
+class _OrderHistoryState extends ConsumerState<OrderHistory> {
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
 
     final user = ref.watch(userProvider)!;
-    final drinkList = ref.watch(drinkRotationProvider);
+    final drinkList = ref.watch(drinkHistoryProvider(user.uid));
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Menu'),
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () => displayDrawer(context),
-            );
-          }
-        ),
-        actions: [
-          Builder(
-            builder: (context) {
-              return IconButton(
-                icon: const Icon(Icons.person_2), 
-                onPressed: () => displayEndDrawer(context),
-              );
-            }
-          )
-        ]
+        title: const Text('Your order history'),
       ),
       body: drinkList.when(
         data: (drinkList) {
@@ -131,14 +100,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       error: (error, stackTrace) => ErrorText(error: error.toString()), 
       loading: () => const Loader()
       ),
-      floatingActionButton: FloatingActionButton.large(
-        onPressed: () {
-          Routemaster.of(context).push('/findcoffee');
-        },
-        child: const Icon(Icons.search),
-      ),
-      drawer: const MenuDrawer(),
-      endDrawer: const ProfileDrawer(),
     );
   }
 }

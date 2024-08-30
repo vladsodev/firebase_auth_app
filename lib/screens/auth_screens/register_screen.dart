@@ -35,7 +35,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             icon: const Icon(Icons.person_2),
             label: const Text('Sign In'),
             onPressed: () {
-              Routemaster.of(context).pop('/');
+              Routemaster.of(context).push('/');
             }
           )
         ],

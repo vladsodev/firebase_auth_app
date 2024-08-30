@@ -93,13 +93,25 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: 'V-Coffee',
       routerDelegate: RoutemasterDelegate(
         routesBuilder: (context) {
-        if (data != null) {
-          getData(ref, data);
-          if (userModel != null) {
-            return loggedInRoute;
-          }
-        } 
-        return loggedOutRoute;
+        // if (data != null) {
+        //   print('getting data');
+        //   getData(ref, data);
+        //   if (userModel != null) {
+        //     print('logged in');
+        //     return loggedInRoute;
+        //   }
+        // }
+        // print('logged out');
+        // return loggedOutRoute;
+        if (data == null) {
+          print('logged out');
+          return loggedOutRoute;
+        }
+        getData(ref, data);
+        if (userModel == null) {
+          return loggedOutRoute;
+        }
+        return loggedInRoute;
         }
       ),
       routeInformationParser: const RoutemasterParser(),

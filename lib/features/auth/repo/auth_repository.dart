@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_app/core/constants/firebase_constants.dart';
 import 'package:firebase_auth_app/core/failure.dart';
 import 'package:firebase_auth_app/core/providers/firebase_providers.dart';
 import 'package:firebase_auth_app/core/type_defs.dart';
+import 'package:firebase_auth_app/models/drink.dart';
 import 'package:firebase_auth_app/models/log.dart';
 import 'package:firebase_auth_app/models/user.dart';
 import 'package:firebase_auth_app/services/encrypt_data.dart';
@@ -25,8 +28,9 @@ class AuthRepository {
 
   CollectionReference get _users => _firestore.collection(FirebaseConstants.usersCollection);
   CollectionReference get _logs => _firestore.collection(FirebaseConstants.logCollection);
-  CollectionReference get _drinks => FirebaseFirestore.instance.collection('drinks').doc('drink_collection').collection('drinks');
-  CollectionReference get _rotation => FirebaseFirestore.instance.collection('drinks').doc('drink_collection').collection('rotation');
+  CollectionReference get _drinks => _firestore.collection('drinks').doc('drink_collection').collection('drinks');
+  CollectionReference get _rotation => _firestore.collection('drinks').doc('drink_collection').collection('rotation');
+  CollectionReference get _orders => _firestore.collection(FirebaseConstants.orders);
 
   Stream<User?> get authStateChanges {
     return _auth.authStateChanges();
@@ -73,6 +77,7 @@ class AuthRepository {
       UserCredential userCredential = await _auth.signInAnonymously();
       UserModel user = UserModel.fromFirebaseUser(userCredential.user!);
       await addLogOnAnonymous(user);
+      _users.doc(user.uid).set(user.toMap());
       return right(user);
     } on FirebaseAuthException catch (e) {
       await addLogOnError('Anonymous', e.message!);
@@ -95,6 +100,10 @@ class AuthRepository {
 
   Stream<UserModel> getUserData(String uid) {
     return _users.doc(uid).snapshots().map((event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  Future updateUserData(UserModel user) async {
+    await _users.doc(user.uid).update(user.toMap());
   }
 
 
@@ -150,6 +159,15 @@ class AuthRepository {
       'timestamp': DateTime.now().toString(),
     });
   }
+
+  Future orderDrink(String uid, Drink drink) async {
+  await _users.doc(uid).collection('history').doc(DateTime.now().toString()).set(drink.toMap());
+  await _orders.doc(DateTime.now().toString()).set({
+    ...drink.toMap(),
+    'timestamp': DateTime.now().toString(),
+    'buyer': uid
+  });
+}
 
   Future addDrinkToRotation(Map<String, dynamic> selectedProduct) async {
     await _rotation.doc(selectedProduct['id'].toString()).set({
@@ -219,6 +237,18 @@ class AuthRepository {
       }; 
     }).toList()
     );
+  }
+
+  Stream<List<Drink>> getDrinksFromHistory(String uid) {
+    return _users.doc(uid).collection('history').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => Drink.fromFirestore(doc)).toList();
+    });
+  }
+
+  Stream<List<Drink>> get getDrinksFromRotation {
+    return _rotation.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => Drink.fromFirestore(doc)).toList();
+    });
   }
 
   Stream<List<Map<String, dynamic>>> get rotationList {

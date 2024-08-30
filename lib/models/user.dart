@@ -17,27 +17,43 @@ class MyUser {
 class UserModel {
   final String uid;
   final String? email;
-  final bool isAuthenticated;
+  final String? firstName;
+  final String? lastName;
+  final String? phoneNumber;
+  final String? dateOfBirth;
+  final bool isAnonymous;
   final String? timestamp;
-  final bool isAdmin = false;
-  final bool isOperator = false;
   UserModel({
     required this.uid,
     this.email,
-    required this.isAuthenticated,
+    this.firstName,
+    this.lastName,
+    this.phoneNumber,
+    this.dateOfBirth,
+    required this.isAnonymous,
     this.timestamp,
   });
+  final bool isAdmin = false;
+  final bool isOperator = false;
 
   UserModel copyWith({
     String? uid,
     String? email,
-    bool? isAuthenticated,
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    String? dateOfBirth,
+    bool? isAnonymous,
     String? timestamp,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
       email: email ?? this.email,
-      isAuthenticated: isAuthenticated ?? this.isAuthenticated,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      isAnonymous: isAnonymous ?? this.isAnonymous,
       timestamp: timestamp ?? this.timestamp,
     );
   }
@@ -46,7 +62,11 @@ class UserModel {
     return <String, dynamic>{
       'uid': uid,
       'email': email,
-      'isAuthenticated': isAuthenticated,
+      'firstName': firstName,
+      'lastName': lastName,
+      'phoneNumber': phoneNumber,
+      'dateOfBirth': dateOfBirth,
+      'isAnonymous': isAnonymous,
       'timestamp': timestamp,
     };
   }
@@ -55,8 +75,8 @@ class UserModel {
     return UserModel(
       uid: user.uid,
       email: user.email,
-      isAuthenticated: user.isAnonymous,
-      timestamp: FieldValue.serverTimestamp().toString(),
+      isAnonymous: user.isAnonymous,
+      timestamp: DateTime.now().toString(),
     );
   }
 
@@ -64,8 +84,12 @@ class UserModel {
     return UserModel(
       uid: map['uid'] as String,
       email: map['email'] != null ? map['email'] as String : null,
-      isAuthenticated: map['isAuthenticated'] as bool,
-      timestamp: map['timestamp'] as String,
+      firstName: map['firstName'] != null ? map['firstName'] as String : null,
+      lastName: map['lastName'] != null ? map['lastName'] as String : null,
+      phoneNumber: map['phoneNumber'] != null ? map['phoneNumber'] as String : null,
+      dateOfBirth: map['dateOfBirth'] != null ? map['dateOfBirth'] as String : null,
+      isAnonymous: map['isAnonymous'] as bool,
+      timestamp: map['timestamp'] != null ? map['timestamp'] as String : null,
     );
   }
 
@@ -75,7 +99,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, email: $email, isAuthenticated: $isAuthenticated, timestamp: $timestamp)';
+    return 'UserModel(uid: $uid, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, dateOfBirth: $dateOfBirth, isAnonymous: $isAnonymous, timestamp: $timestamp)';
   }
 
   @override
@@ -85,7 +109,11 @@ class UserModel {
     return 
       other.uid == uid &&
       other.email == email &&
-      other.isAuthenticated == isAuthenticated &&
+      other.firstName == firstName &&
+      other.lastName == lastName &&
+      other.phoneNumber == phoneNumber &&
+      other.dateOfBirth == dateOfBirth &&
+      other.isAnonymous == isAnonymous &&
       other.timestamp == timestamp;
   }
 
@@ -93,7 +121,11 @@ class UserModel {
   int get hashCode {
     return uid.hashCode ^
       email.hashCode ^
-      isAuthenticated.hashCode ^
+      firstName.hashCode ^
+      lastName.hashCode ^
+      phoneNumber.hashCode ^
+      dateOfBirth.hashCode ^
+      isAnonymous.hashCode ^
       timestamp.hashCode;
   }
 }

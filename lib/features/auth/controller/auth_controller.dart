@@ -1,3 +1,4 @@
+import 'package:firebase_auth_app/models/drink.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_app/features/auth/repo/auth_repository.dart';
@@ -24,6 +25,16 @@ final getUserDataProvider = StreamProvider.family((ref, String uid) {
   return authController.getUserData(uid);
 });
 
+final drinkRotationProvider = StreamProvider((ref) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getDrinksFromRotation;
+});
+
+final drinkHistoryProvider = StreamProvider.family((ref, String uid) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getDrinksFromHistory(uid);
+});
+
 class AuthController extends StateNotifier<bool>{
   final AuthRepository _authRepository;
   final Ref _ref;
@@ -33,6 +44,10 @@ class AuthController extends StateNotifier<bool>{
         super(false); // represents the loading state
 
   Stream<User?> get authStateChanges => _authRepository.authStateChanges;
+
+  Stream<List<Drink>> get getDrinksFromRotation => _authRepository.getDrinksFromRotation;
+
+  Stream<List<Drink>> getDrinksFromHistory(String uid) => _authRepository.getDrinksFromHistory(uid);
 
   void signUpWithEmail(String email, String password, BuildContext context) async {
     state = true;
@@ -67,5 +82,21 @@ class AuthController extends StateNotifier<bool>{
     return _authRepository.getUserData(uid);
   }
 
+  void updateUserData(UserModel user, BuildContext context) {
+    _authRepository.updateUserData(user);
+    showSnackBar(context, 'Succesfully updated!');
+  }
+
+  void orderDrink(UserModel user, Drink? drink, BuildContext context) {
+    if (user.isAnonymous) {
+      showSnackBar(context, 'Sign in to order!');
+    } else
+    if (drink == null) {
+      showSnackBar(context, 'No drink selected!');
+    } else {
+    _authRepository.orderDrink(user.uid, drink);
+    showSnackBar(context, 'Ordered!');
+    }
+  }
 
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 class MenuDrawer extends ConsumerWidget {
   const MenuDrawer({super.key});
@@ -10,7 +11,10 @@ class MenuDrawer extends ConsumerWidget {
       child: SafeArea(
         child: Column(
           children: [
-            ListTile()
+            ListTile(
+              onTap: () => Routemaster.of(context).push('/orderhistory'),
+              title: const Text('Order History'),
+            ),
           ],
         ),
       ),
