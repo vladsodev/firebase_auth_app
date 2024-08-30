@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final firestoreProvider = Provider((ref) => FirebaseFirestore.instance);
 final authProvider = Provider((ref) => FirebaseAuth.instance);
 
-final authStateProvider = StreamProvider<UserModel?>((ref) {
-  final authController = ref.watch(authControllerProvider);
-  return authController.authStateChanges;
-});
+// final authStateProvider = StreamProvider<UserModel?>((ref) {
+//   final authController = ref.watch(authControllerProvider);
+//   return authController.authStateChanges;
+// });

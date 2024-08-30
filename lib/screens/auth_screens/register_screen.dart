@@ -1,23 +1,24 @@
-import 'package:firebase_auth_app/services/auth.dart';
-import 'package:firebase_auth_app/utils/show_snack_bar.dart';
+import 'package:firebase_auth_app/core/common/loader.dart';
+import 'package:firebase_auth_app/core/common/sign_in_buttons.dart';
+import 'package:firebase_auth_app/features/auth/controller/auth_controller.dart';
+import 'package:firebase_auth_app/screens/auth_screens/sign_in_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:zxcvbn/zxcvbn.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
-class RegisterForm extends StatefulWidget {
-  final Function toggleView;
+
+class RegisterForm extends ConsumerStatefulWidget {
+
   const RegisterForm({
     super.key,
-    required this.toggleView
   });
 
   @override
-  State<RegisterForm> createState() => _RegisterFormState();
+  ConsumerState<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _RegisterFormState extends ConsumerState<RegisterForm> {
 
-  final AuthService _auth = AuthService();
-  final Zxcvbn _zxcvbn = Zxcvbn();
   final _formKey = GlobalKey<FormState>();
 
   String email = '';
@@ -25,15 +26,16 @@ class _RegisterFormState extends State<RegisterForm> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(authControllerProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign in to V-coffee'),
+        title: const Text('Sign Up to V-coffee'),
         actions: [
           TextButton.icon(
             icon: const Icon(Icons.person_2),
-            label: const Text('Sign in'),
+            label: const Text('Sign In'),
             onPressed: () {
-              widget.toggleView();
+              Routemaster.of(context).pop('/');
             }
           )
         ],
@@ -70,16 +72,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      ElevatedButton (
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            final strength = _zxcvbn.evaluate(password);
-                            showSnackBar(context, 'Password strength: ${strength.score}');
-                            dynamic result = await _auth.registerWithEmailAndPassword(email, password, context);
-                          }
-                        }, 
-                        child: const Text('Sign up'),
-                      ),
+                      SignUpButton(email: email, password: password)
                     ]
                   )
                 ),

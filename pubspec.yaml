@@ -39,8 +39,7 @@ dependencies:
   flutter_riverpod: ^2.5.1
   fpdart: ^1.1.0
   http: ^1.2.1
-  provider: ^6.1.2
-  riverpod: ^2.5.1
+  routemaster: ^1.0.1
   window_manager: ^0.3.8
   zxcvbn: ^1.0.0
 
