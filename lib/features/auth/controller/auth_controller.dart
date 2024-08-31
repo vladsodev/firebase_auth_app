@@ -35,6 +35,14 @@ final drinkHistoryProvider = StreamProvider.family((ref, String uid) {
   return authController.getDrinksFromHistory(uid);
 });
 
+final userDataProvider = FutureProvider.autoDispose<UserModel?>((ref) async {
+  final authState = ref.watch(authStateChangeProvider).value;
+  if (authState != null) {
+    return await ref.watch(authControllerProvider.notifier).getUserData(authState.uid).first;
+  }
+  return null;
+});
+
 class AuthController extends StateNotifier<bool>{
   final AuthRepository _authRepository;
   final Ref _ref;
@@ -62,7 +70,17 @@ class AuthController extends StateNotifier<bool>{
     state = true;
     final user = await _authRepository.signInWithEmail(email, password);
     state = false;
-    user.fold((l) => showSnackBar(context, l.message), (r) => null);
+    user.fold((l) => showSnackBar(context, l.message), (userModel) => _ref.read(userProvider.notifier).update((state) => userModel));
+  }
+
+  void signInAsGuest(BuildContext context) async {
+    state = true;
+    final user = await _authRepository.signInAsGuest();
+    state = false;
+    user.fold(
+      (l) => showSnackBar(context, l.message),
+      (userModel) => _ref.read(userProvider.notifier).update((state) => userModel),
+    );
   }
 
   void signInAnonymously(BuildContext context) async {
@@ -72,7 +90,7 @@ class AuthController extends StateNotifier<bool>{
     user.fold((l) => showSnackBar(context, l.message), (r) => null);
   }
 
-  void signOut(String email, BuildContext context) async {
+  void signOut(String? email, BuildContext context) async {
     state = true;
     await _authRepository.signOut(email);
     state = false;

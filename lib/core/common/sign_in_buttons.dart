@@ -33,7 +33,7 @@ class SignUpButton extends ConsumerWidget {
 }
 
 class SignOutButton extends ConsumerWidget {
-  final String email;
+  final String? email;
   const SignOutButton({
     required this.email,
     super.key
@@ -72,18 +72,91 @@ class SignInButton extends ConsumerWidget {
   void signInWithEmailAndPassword(String email, String password, BuildContext context, WidgetRef ref) {
 
     ref.read(authControllerProvider.notifier).signInWithEmail(email, password, context);
+
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(      padding: const EdgeInsets.all(8.0), 
       child: TextButton(
-        onPressed: () => signInWithEmailAndPassword(email, password, context, ref),
+        onPressed: () {
+          signInWithEmailAndPassword(email, password, context, ref);
+          
+        },
         child: const Text('Sign In')
       ),
     );
   }
 }
+
+class SigInGigaButton extends ConsumerStatefulWidget {
+  final String email;
+  final String password;
+  const SigInGigaButton({
+    required this.email,
+    required this.password,
+    super.key
+  });
+
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _SigInGigaButtonState();
+}
+
+class _SigInGigaButtonState extends ConsumerState<SigInGigaButton> {
+
+  void signInWithEmailAndPassword(String email, String password, BuildContext context, WidgetRef ref) {
+
+    ref.read(authControllerProvider.notifier).signInWithEmail(email, password, context);
+    setState(() {print('set');});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(      
+      padding: const EdgeInsets.all(8.0), 
+      child: TextButton(
+        onPressed: () {
+          signInWithEmailAndPassword(widget.email, widget.password, context, ref);
+        },
+        child: const Text('Sign In')
+      ),
+    );
+  }
+}
+
+
+class SignInAsGuestButton extends ConsumerStatefulWidget {
+  const SignInAsGuestButton({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignInAsGuestButtonState();
+}
+
+class _SignInAsGuestButtonState extends ConsumerState<SignInAsGuestButton> {
+
+  void signInAsGuest(WidgetRef ref, BuildContext context) {
+    ref.read(authControllerProvider.notifier).signInAsGuest(context);
+    setState(() {
+      print('guest setstate');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(      
+      padding: const EdgeInsets.all(8.0), 
+      child: TextButton(
+        onPressed: () {
+          signInAsGuest(ref, context);
+        },
+        child: const Text('Sign In')
+      ),
+    );
+  }
+}
+
+
 
 class SignInAnonButton extends ConsumerWidget {
 

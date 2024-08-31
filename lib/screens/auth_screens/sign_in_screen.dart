@@ -22,6 +22,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   String email = '';
   String password = '';
 
+
+
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authControllerProvider);
@@ -70,11 +72,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      SignInButton(email: email, password: password),
+                      SigInGigaButton(email: email, password: password),
                       const SizedBox(height: 20),
                       const Text('or'),
                       const SizedBox(height: 20),
-                      const SignInAnonButton(),
+                      SignInAsGuestButton(),
                     ]
                   )
                 ),

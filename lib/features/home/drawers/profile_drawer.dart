@@ -10,18 +10,22 @@ class ProfileDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
+    final isGuest = user.isAnonymous;
     return Drawer(
       child: SafeArea(
         child: Column(
           children: [
-            const Icon(Icons.person, size: 100),
-            user.firstName != null ? Text(user.firstName!) : const Text(''),
-            ListTile(
-              onTap: () => Routemaster.of(context).push('/userinfo'),
-              title: const Text('User Info'),
-            ),
-            const SizedBox(height: 20),
-            SignOutButton(email: user.email!)
+            if (isGuest) 
+              ...[SignOutButton(email: user.email)],
+            if (!isGuest) ...[
+              const Icon(Icons.person, size: 100),
+              user.firstName != null ? Text(user.firstName!) : const Text(''),
+              ListTile(
+                onTap: () => Routemaster.of(context).push('/userinfo'),
+                title: const Text('User Info'),
+              ),
+              const SizedBox(height: 20),
+            ],
           ],
         ),
       ),

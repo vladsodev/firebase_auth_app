@@ -1,10 +1,10 @@
 //loggedOut
 //loggedIn
 
-import 'package:firebase_auth_app/features/home/screens/find_coffee_screen.dart';
-import 'package:firebase_auth_app/features/home/screens/home_screen.dart';
-import 'package:firebase_auth_app/features/home/screens/order_history_screen.dart';
-import 'package:firebase_auth_app/features/home/screens/user_info.dart';
+import 'package:firebase_auth_app/features/home/screens/user_screens/find_coffee_screen.dart';
+import 'package:firebase_auth_app/features/home/screens/user_screens/home_screen.dart';
+import 'package:firebase_auth_app/features/home/screens/user_screens/order_history_screen.dart';
+import 'package:firebase_auth_app/features/home/screens/user_screens/user_info.dart';
 import 'package:firebase_auth_app/screens/auth_screens/register_screen.dart';
 import 'package:firebase_auth_app/screens/auth_screens/sign_in_screen.dart';
 import 'package:flutter/material.dart';

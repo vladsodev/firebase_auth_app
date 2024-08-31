@@ -33,7 +33,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final user = ref.watch(userProvider)!;
+    final user = ref.watch(userProvider);
+    print(user);
     final drinkList = ref.watch(drinkRotationProvider);
     
     return Scaffold(

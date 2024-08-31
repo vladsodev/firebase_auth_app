@@ -1,3 +1,5 @@
+import 'package:firebase_auth_app/core/common/sign_in_buttons.dart';
+import 'package:firebase_auth_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -7,9 +9,13 @@ class MenuDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
+    final isGuest = user.isAnonymous;
     return Drawer(
       child: SafeArea(
-        child: Column(
+        child: isGuest
+        ? SignOutButton(email: user.email) 
+        : Column(
           children: [
             ListTile(
               onTap: () => Routemaster.of(context).push('/orderhistory'),

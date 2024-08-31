@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Drink product;
-  final UserModel user;
+  final UserModel? user;
   const ProductDetailsPage({
     super.key,
     required this.product,
@@ -71,7 +71,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: OrderButtonBig(user: widget.user, drink: widget.product)
+                    child: OrderButtonBig(user: widget.user!, drink: widget.product)
                   ),
                 ]
               ),
