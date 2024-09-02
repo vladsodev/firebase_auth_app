@@ -1,3 +1,5 @@
+import 'package:firebase_auth_app/core/common/error_text.dart';
+import 'package:firebase_auth_app/core/common/loader.dart';
 import 'package:firebase_auth_app/core/common/sign_in_buttons.dart';
 import 'package:firebase_auth_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
@@ -14,30 +16,65 @@ class AdminMenu extends ConsumerStatefulWidget {
 class _AdminMenuState extends ConsumerState<AdminMenu> {
 
   @override
+
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider)!;
+
+    final user = ref.watch(userDataProvider);
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin menu'),
       ),
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Routemaster.of(context).push('/viewlogs');
-                },
-                style: ButtonStyle(
-                  fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+      body: user.when(
+        data: (user) {
+        return SafeArea(
+          child: Center(
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Routemaster.of(context).push('/viewlogs');
+                  },
+                  style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+                  ),
+                  child: const Text('View Logs'),
                 ),
-                child: const Text('View Logs'),
-              ),
-              SignOutButton(user: user)
-            ],
+                SignOutButton(user: user!)
+              ],
+            )
           )
-        )
-      ),
-    );
+        );
+        }, 
+        error: (error, stackTrace) => ErrorText(error: error.toString()),
+        loading: () => const Loader(),),
+      );
   }
+
+  // Widget build(BuildContext context) {
+  //   final user = ref.watch(userProvider)!;
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: const Text('Admin menu'),
+  //     ),
+  //     body: SafeArea(
+  //       child: Center(
+  //         child: Column(
+  //           children: [
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 Routemaster.of(context).push('/viewlogs');
+  //               },
+  //               style: ButtonStyle(
+  //                 fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+  //               ),
+  //               child: const Text('View Logs'),
+  //             ),
+  //             SignOutButton(user: user)
+  //           ],
+  //         )
+  //       )
+  //     ),
+  //   );
+  // }
 }

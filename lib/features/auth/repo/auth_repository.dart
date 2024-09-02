@@ -211,7 +211,7 @@ class AuthRepository {
   // }
 
   Future orderDrink(String uid, Drink drink) async {
-    final order = VcoffeeOrder(name: drink.name, price: drink.price, timestamp: DateTime.now().toString(), buyer: uid);
+    final order = VcoffeeOrder(name: drink.name, price: drink.price, timestamp: DateTime.now().toString(), buyer: uid, id: drink.id);
     await addLogOnOrder(uid, drink);
     await _users.doc(uid).collection('history').doc(order.timestamp).set({...drink.toMap(), 'timestamp': order.timestamp});
     await _allOrders.doc(order.timestamp).set(order.toMap());

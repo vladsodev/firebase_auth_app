@@ -81,16 +81,28 @@ final cancelledOrdersProvider = StreamProvider((ref) {
 });
 
 
-
-
+final latestUserDataProvider = StateProvider<UserModel?>((ref) => null);
 
 final userDataProvider = FutureProvider.autoDispose<UserModel?>((ref) async {
   final authState = ref.watch(authStateChangeProvider).value;
   if (authState != null) {
-    return await ref.watch(authControllerProvider.notifier).getUserData(authState.uid).first;
+    await Future.delayed(const Duration(seconds: 1));
+    final userData = await ref.watch(authControllerProvider.notifier).getUserData(authState.uid).first;
+    ref.read(latestUserDataProvider.notifier).update((state) => userData);
+    return userData;
   }
   return null;
 });
+
+
+// final userDataProvider = FutureProvider.autoDispose<UserModel?>((ref) async {
+//   final authState = ref.watch(authStateChangeProvider).value;
+//   if (authState != null) {
+//     await Future.delayed(const Duration(seconds: 1));
+//     return await ref.watch(authControllerProvider.notifier).getUserData(authState.uid).first;
+//   }
+//   return null;
+// });
 
 class AuthController extends StateNotifier<bool>{
   final AuthRepository _authRepository;
@@ -166,6 +178,7 @@ class AuthController extends StateNotifier<bool>{
 
   void updateUserData(UserModel user, BuildContext context) {
     _authRepository.updateUserData(user);
+    _ref.read(latestUserDataProvider.notifier).update((state) => user);
     showSnackBar(context, 'Succesfully updated!');
   }
 

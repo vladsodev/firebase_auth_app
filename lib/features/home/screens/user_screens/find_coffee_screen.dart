@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_auth_app/core/common/error_text.dart';
 import 'package:firebase_auth_app/core/common/image_urls.dart';
 import 'package:firebase_auth_app/core/common/loader.dart';
 import 'package:firebase_auth_app/core/common/product_card.dart';
@@ -63,11 +64,11 @@ class _FindCoffeeState extends ConsumerState<FindCoffee> {
     }
     }
 
-  
-
   @override
+
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider)!;
+
+    final user = ref.watch(userDataProvider);
     rotationDrinks = ref.watch(drinkRotationProvider);
     rotationDrinks.when(
       data: (List<Drink> drinks) {
@@ -76,13 +77,13 @@ class _FindCoffeeState extends ConsumerState<FindCoffee> {
       error: (error, stackTrace) => showSnackBar(context, error.toString()), 
       loading: () => const Loader(),
     );
-    
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Find your coffee'),
       ),
-      body: SafeArea(
+      body: user.when(
+        data: (user) {
+          return SafeArea(
         child: ListView(
           scrollDirection: Axis.vertical,
           children: [
@@ -182,7 +183,7 @@ class _FindCoffeeState extends ConsumerState<FindCoffee> {
                 },
                 child: const Text('Show all matching products'),
               ),
-              OrderButtonSmall(user: user, drink: selectedProduct)
+              OrderButtonSmall(user: user!, drink: selectedProduct)
             ],
           ),
           const SizedBox(height: 20),
@@ -190,9 +191,141 @@ class _FindCoffeeState extends ConsumerState<FindCoffee> {
       ),
           ]
         )
-      )
-    );
+      );
+        }, 
+        error: (error, stackTrace) => ErrorText(error: error.toString()),
+        loading: () => const Loader(),),
+      );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   final user = ref.watch(userProvider)!;
+  //   rotationDrinks = ref.watch(drinkRotationProvider);
+  //   rotationDrinks.when(
+  //     data: (List<Drink> drinks) {
+  //       products = drinks.map((Drink drink) => drink.toMap()).toList();
+  //     }, 
+  //     error: (error, stackTrace) => showSnackBar(context, error.toString()), 
+  //     loading: () => const Loader(),
+  //   );
+    
+
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: const Text('Find your coffee'),
+  //     ),
+  //     body: SafeArea(
+  //       child: ListView(
+  //         scrollDirection: Axis.vertical,
+  //         children: [
+  //           Column(
+  //       children: [
+  //         // Price slider
+  //         Text('Max Price: \$${maxPrice.toStringAsFixed(0)}'),
+  //         Slider(
+  //           value: maxPrice,
+  //           min: 0,
+  //           max: 200,
+  //           divisions: 20,
+  //           label: maxPrice.round().toString(),
+  //           onChanged: (value) {
+  //             setState(() {
+  //               maxPrice = value;
+  //             });
+  //           },
+  //         ),
+  //         // Milky filter
+  //         CheckboxListTile(
+  //           title: const Text('Milky'),
+  //           value: isMilky,
+  //           onChanged: (value) {
+  //             setState(() {
+  //               isMilky = value!;
+  //             });
+  //           },
+  //         ),
+  //         // Cold filter
+  //         CheckboxListTile(
+  //           title: const Text('Cold'),
+  //           value: isCold,
+  //           onChanged: (value) {
+  //             setState(() {
+  //               isCold = value!;
+  //             });
+  //           },
+  //         ),
+  //         // Sweet filter
+  //         CheckboxListTile(
+  //           title: const Text('Sweet'),
+  //           value: isSweet,
+  //           onChanged: (value) {
+  //             setState(() {
+  //               isSweet = value!;
+  //             });
+  //           },
+  //         ),
+  //         // Sour filter
+  //         CheckboxListTile(
+  //           title: const Text('Sour'),
+  //           value: isSour,
+  //           onChanged: (value) {
+  //             setState(() {
+  //               isSour = value!;
+  //             });
+  //           },
+  //         ),
+  //         // Strength slider
+  //         Text('Max Strength: ${maxStrength.toStringAsFixed(0)}'),
+  //         Slider(
+  //           value: maxStrength,
+  //           min: 0,
+  //           max: 5,
+  //           divisions: 5,
+  //           label: maxStrength.round().toString(),
+  //           onChanged: (value) {
+  //             setState(() {
+  //               maxStrength = value;
+  //             });
+  //           },
+  //         ),
+  //         // Find my coffee button
+  //         ElevatedButton(
+  //           onPressed: findRandomProduct,
+  //           child: const Text('Find my coffee'),
+  //         ),
+  //         // Display selected product or message
+  //         if (selectedProduct != null)
+  //           ProductCard(name: selectedProduct!.name, description: selectedProduct!.description, price: selectedProduct!.price, image: ImageUrls.coffeeCup, backgroundColor: Colors.white)
+  //         else
+  //           const Text('No products found'),
+  //         // Show all filtered products button
+  //         Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //           children: [
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 filterProducts();
+  //                 Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                     builder: (context) => FilteredProductsPage(filteredProducts: filteredProducts),
+  //                   ),
+  //                 );
+  //               },
+  //               child: const Text('Show all matching products'),
+  //             ),
+  //             OrderButtonSmall(user: user, drink: selectedProduct)
+  //           ],
+  //         ),
+  //         const SizedBox(height: 20),
+  //       ],
+  //     ),
+  //         ]
+  //       )
+  //     )
+  //   );
+  // }
 }
 
 class FilteredProductsPage extends StatelessWidget {

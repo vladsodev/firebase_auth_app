@@ -2,6 +2,7 @@ import 'package:firebase_auth_app/core/common/error_text.dart';
 import 'package:firebase_auth_app/core/common/loader.dart';
 import 'package:firebase_auth_app/features/auth/controller/auth_controller.dart';
 import 'package:firebase_auth_app/router.dart';
+import 'package:firebase_auth_app/utils/product_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,6 +46,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return ref.watch(authStateChangeProvider).when(
       data: (data) {
+        print('watch data $data');
         final userData = ref.watch(userDataProvider);
         
         return userData.when(
