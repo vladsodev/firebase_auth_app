@@ -1,9 +1,10 @@
 // import 'package:firebase_auth_app/models/log.dart';
 // import 'package:firebase_auth_app/services/encrypt_data.dart';
 // import 'package:firebase_auth_app/services/regexp.dart';
+// import 'package:firebase_auth_app/utils/logparsing.dart';
 // import 'package:flutter/material.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:provider/provider.dart';
+
 
 // class ParseLogs extends StatefulWidget {
 //   const ParseLogs({super.key});

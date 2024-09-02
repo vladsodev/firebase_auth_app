@@ -14,7 +14,7 @@ class MenuDrawer extends ConsumerWidget {
     return Drawer(
       child: SafeArea(
         child: isGuest
-        ? SignOutButton(email: user.email) 
+        ? SignOutButton(user: user,) 
         : Column(
           children: [
             ListTile(

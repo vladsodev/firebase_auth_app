@@ -33,9 +33,9 @@ class SignUpButton extends ConsumerWidget {
 }
 
 class SignOutButton extends ConsumerWidget {
-  final String? email;
+  final UserModel user;
   const SignOutButton({
-    required this.email,
+    required this.user,
     super.key
   });
 
@@ -43,7 +43,7 @@ class SignOutButton extends ConsumerWidget {
 
   void signOut(WidgetRef ref, BuildContext context) {
 
-    ref.read(authControllerProvider.notifier).signOut(email, context);
+    ref.read(authControllerProvider.notifier).signOut(user, context);
   }
 
 
@@ -150,7 +150,7 @@ class _SignInAsGuestButtonState extends ConsumerState<SignInAsGuestButton> {
         onPressed: () {
           signInAsGuest(ref, context);
         },
-        child: const Text('Sign In')
+        child: const Text('Sign in as guest')
       ),
     );
   }

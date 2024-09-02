@@ -30,7 +30,13 @@ class AuthRepository {
   CollectionReference get _logs => _firestore.collection(FirebaseConstants.logCollection);
   CollectionReference get _drinks => _firestore.collection('drinks').doc('drink_collection').collection('drinks');
   CollectionReference get _rotation => _firestore.collection('drinks').doc('drink_collection').collection('rotation');
+  CollectionReference get _removedFromRotation => _firestore.collection('drinks').doc('drink_collection').collection('removed_from_rotation');
   CollectionReference get _orders => _firestore.collection(FirebaseConstants.orders);
+  CollectionReference get _allOrders => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('all_orders');
+  CollectionReference get _ordersInProgress => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('orders_in_progress');
+  CollectionReference get _completedOrders => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('completed_orders');
+  CollectionReference get _cancelledOrders => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('cancelled_orders');
+  CollectionReference get _newOrders => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('orders_in_progress');
 
   Stream<User?> get authStateChanges {
     return _auth.authStateChanges();
@@ -63,6 +69,7 @@ class AuthRepository {
         password: password,
       );
       UserModel user = UserModel.fromFirebaseUser(userCredential.user!);
+      await addLogOnSignIn(user);
       return right(user);
     } on FirebaseAuthException catch (e) {
       await addLogOnError(email, e.message!);
@@ -90,7 +97,7 @@ class AuthRepository {
     FutureEither<UserModel> signInAsGuest() async {
     try {
       var userCredential = await _auth.signInAnonymously();
-
+      await addLogOnAnonymous(UserModel.fromFirebaseUser(userCredential.user!));
       UserModel userModel = UserModel(
         firstName: 'Guest',
         isAnonymous: true,
@@ -101,13 +108,15 @@ class AuthRepository {
 
       return right(userModel);
     } on FirebaseException catch (e) {
-      throw e.message!;
+      await addLogOnError('Guest', e.message!);
+      return left(Failure(e.message!));
     } catch (e) {
       return left(Failure(e.toString()));
     }
   }
 
-  Future<void> signOut(String? email) async {
+  Future<void> signOut(UserModel user) async {
+    addLogOnSignOut(user);
     await _auth.signOut();
   }
 
@@ -135,10 +144,17 @@ class AuthRepository {
     });
   }
 
-  Future addLogOnSignOut(String email) async {
+  Future addLogOnSignOut(UserModel user) async {
+    if (user.isAnonymous) {
+      await _logs.doc(DateTime.now().toString()).set({
+        'timestamp': FieldValue.serverTimestamp(),
+        'message': cypher.encrypt('Guest ${user.uid} signed out')
+      });
+      return;
+    }
     await _logs.doc(DateTime.now().toString()).set({
       'timestamp': FieldValue.serverTimestamp(),
-      'message': cypher.encrypt('$email signed out')
+      'message': cypher.encrypt('${user.email} signed out')
     });
   }
 
@@ -152,7 +168,7 @@ class AuthRepository {
   Future addLogOnAnonymous(UserModel user) async {
     await _logs.doc(DateTime.now().toString()).set({
       'timestamp': FieldValue.serverTimestamp(),
-      'message': cypher.encrypt('Anonymous user ${user.uid} signed in')
+      'message': cypher.encrypt('Guest ${user.uid} signed in')
     });
   }
 
@@ -172,39 +188,106 @@ class AuthRepository {
     });
   }
 
-  Future addDrinkToHistory(String uid, Map<String, dynamic> selectedProduct) async {
-    await _users.doc(uid).collection('history').doc(DateTime.now().toString()).set({
-      'id': selectedProduct['id'],
-      'name' : selectedProduct['name'],
-      'timestamp': DateTime.now().toString(),
+  Future addLogOnOrder(String uid, Drink drink) async {
+      await _logs.doc(DateTime.now().toString()).set({
+      'timestamp': FieldValue.serverTimestamp(),
+      'message': cypher.encrypt('User $uid ordered ${drink.name} with id ${drink.id}')
     });
   }
+
+  Future addLogOnNewDrink(String uid, Drink drink) async {
+    await _logs.doc(DateTime.now().toString()).set({
+      'timestamp': FieldValue.serverTimestamp(),
+      'message': cypher.encrypt('Operator $uid added new drink ${drink.name} with id ${drink.id}')
+    });
+  }
+
+  // Future addDrinkToHistory(String uid, Map<String, dynamic> selectedProduct) async {
+  //   await _users.doc(uid).collection('history').doc(DateTime.now().toString()).set({
+  //     'id': selectedProduct['id'],
+  //     'name' : selectedProduct['name'],
+  //     'timestamp': DateTime.now().toString(),
+  //   });
+  // }
 
   Future orderDrink(String uid, Drink drink) async {
-  await _users.doc(uid).collection('history').doc(DateTime.now().toString()).set(drink.toMap());
-  await _orders.doc(DateTime.now().toString()).set({
-    ...drink.toMap(),
-    'timestamp': DateTime.now().toString(),
-    'buyer': uid
-  });
-}
-
-  Future addDrinkToRotation(Map<String, dynamic> selectedProduct) async {
-    await _rotation.doc(selectedProduct['id'].toString()).set({
-      'id': selectedProduct['id'],
-      'name': selectedProduct['name'],
-      'description': selectedProduct['description'],
-      'price': selectedProduct['price'],
-      'cold': selectedProduct['cold'],
-      'milky': selectedProduct['milky'],
-      'sweet': selectedProduct['sweet'],
-      'sour': selectedProduct['sour'],
-      'strength': selectedProduct['strength'],
+    await addLogOnOrder(uid, drink);
+    await _users.doc(uid).collection('history').doc(DateTime.now().toString()).set(drink.toMap());
+    await _allOrders.doc(DateTime.now().toString()).set({
+      ...drink.toMap(),
+      'timestamp': DateTime.now().toString(),
+      'buyer': uid
+    });
+    await _newOrders.doc(DateTime.now().toString()).set({
+      ...drink.toMap(),
+      'timestamp': DateTime.now().toString(),
+      'buyer': uid
     });
   }
 
-  Future removeDrinkFromRotation(Map<String, dynamic> selectedProduct) async {
-    await _rotation.doc(selectedProduct['id'].toString()).delete();
+  Future acceptOrder(String uid, Drink drink) async {
+    await _ordersInProgress.doc(DateTime.now().toString()).set({
+      ...drink.toMap(),
+      'timestamp': DateTime.now().toString(),
+      'buyer': uid
+    });
+  }
+
+  Future cancelOrder(String uid, Drink drink) async {
+    await _cancelledOrders.doc(DateTime.now().toString()).set({
+      ...drink.toMap(),
+      'timestamp': DateTime.now().toString(),
+      'buyer': uid
+    });
+  }
+
+  // Future addDrinkToRotation(Map<String, dynamic> selectedProduct) async {
+  //   await _rotation.doc(selectedProduct['id'].toString()).set({
+  //     'id': selectedProduct['id'],
+  //     'name': selectedProduct['name'],
+  //     'description': selectedProduct['description'],
+  //     'price': selectedProduct['price'],
+  //     'cold': selectedProduct['cold'],
+  //     'milky': selectedProduct['milky'],
+  //     'sweet': selectedProduct['sweet'],
+  //     'sour': selectedProduct['sour'],
+  //     'strength': selectedProduct['strength'],
+  //   });
+  // }
+
+  Future<int> getNextId() async {
+    final querySnapshot = await _drinks
+        .orderBy('id', descending: true)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final maxId = querySnapshot.docs.first.get('id') as int;
+      return maxId + 1;
+    } else {
+      return 1; // Если коллекция пуста
+    }
+  }
+
+
+  Future<void> addNewDrink(String uid, Drink drink) async {
+    int newId = await getNextId();
+    drink.id = newId;
+    final drinkDoc = _drinks.doc(drink.id.toString());
+    await drinkDoc.set(drink.toMap());
+    await addLogOnNewDrink(uid, drink);
+  }
+
+
+  Future addDrinkToRotationBetter(Drink drink) async {
+    await _removedFromRotation.doc(drink.id.toString()).delete();
+    await _rotation.doc(drink.id.toString()).set(drink.toMap());
+  }
+
+
+  Future removeDrinkFromRotation(Drink selectedProduct) async {
+    await _removedFromRotation.doc(selectedProduct.id.toString()).set(selectedProduct.toMap());
+    await _rotation.doc(selectedProduct.id.toString()).delete();
   }
 
 
@@ -213,7 +296,7 @@ class AuthRepository {
     return snapshot.docs.map((doc) {
       return Log(
         timeStamp: (doc.data() as dynamic)['timestamp'] as Timestamp,
-        message: (doc.data() as dynamic)['message'] as String
+        message: cypher.decrypt((doc.data() as dynamic)['message'] as String) 
       );
     }).toList();
   }
@@ -270,6 +353,23 @@ class AuthRepository {
       return snapshot.docs.map((doc) => Drink.fromFirestore(doc)).toList();
     });
   }
+
+  Stream<List<Drink>> get getRemovedDrinks {
+    return _removedFromRotation.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => Drink.fromFirestore(doc)).toList();
+    });
+  }
+
+
+  Stream<List<Drink>> get getMenu {
+    return _drinks.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => Drink.fromFirestore(doc)).toList();
+    });
+  }
+
+  
+
+
 
   Stream<List<Map<String, dynamic>>> get rotationList {
     return _rotation.snapshots()

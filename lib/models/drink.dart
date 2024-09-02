@@ -3,8 +3,100 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class Order {
+  int? id;
+  final String name;
+  final double price;
+  DateTime timestamp;
+  String buyer;
+  Order({
+    this.id,
+    required this.name,
+    required this.price,
+    required this.timestamp,
+    required this.buyer,
+  });
+
+  Order copyWith({
+    int? id,
+    String? name,
+    double? price,
+    DateTime? timestamp,
+    String? buyer,
+  }) {
+    return Order(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      timestamp: timestamp ?? this.timestamp,
+      buyer: buyer ?? this.buyer,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'price': price,
+      'timestamp': timestamp.millisecondsSinceEpoch,
+      'buyer': buyer,
+    };
+  }
+
+  factory Order.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Order(
+      id: data['id'],
+      name: data['name'],
+      price: data['price'],
+      timestamp: data['timestamp'].toDate(),
+      buyer: data['buyer'],
+    );
+  }
+
+  factory Order.fromMap(Map<String, dynamic> map) {
+    return Order(
+      id: map['id'] != null ? map['id'] as int : null,
+      name: map['name'] as String,
+      price: map['price'] as double,
+      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
+      buyer: map['buyer'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Order.fromJson(String source) => Order.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'Order(id: $id, name: $name, price: $price, timestamp: $timestamp, buyer: $buyer)';
+  }
+
+  @override
+  bool operator ==(covariant Order other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.id == id &&
+      other.name == name &&
+      other.price == price &&
+      other.timestamp == timestamp &&
+      other.buyer == buyer;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+      name.hashCode ^
+      price.hashCode ^
+      timestamp.hashCode ^
+      buyer.hashCode;
+  }
+}
+
 class Drink {
-  final int id;
+  int? id;
   final String name;
   final String description;
   final double price;
@@ -14,7 +106,7 @@ class Drink {
   final bool sour;
   final int strength;
   Drink({
-    required this.id,
+    this.id,
     required this.name,
     required this.description,
     required this.price,

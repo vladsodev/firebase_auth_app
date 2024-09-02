@@ -42,7 +42,7 @@ class ProductCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),            
               child: Image(
                 image: AssetImage(image),
-                height: 150,
+                height: 100,
                 isAntiAlias: true,
               ),
             ),

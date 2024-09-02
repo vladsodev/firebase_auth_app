@@ -76,7 +76,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       const SizedBox(height: 20),
                       const Text('or'),
                       const SizedBox(height: 20),
-                      SignInAsGuestButton(),
+                      const SignInAsGuestButton(),
                     ]
                   )
                 ),

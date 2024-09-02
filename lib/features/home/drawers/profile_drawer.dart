@@ -16,7 +16,7 @@ class ProfileDrawer extends ConsumerWidget {
         child: Column(
           children: [
             if (isGuest) 
-              ...[SignOutButton(email: user.email)],
+              ...[SignOutButton(user: user)],
             if (!isGuest) ...[
               const Icon(Icons.person, size: 100),
               user.firstName != null ? Text(user.firstName!) : const Text(''),
@@ -25,6 +25,7 @@ class ProfileDrawer extends ConsumerWidget {
                 title: const Text('User Info'),
               ),
               const SizedBox(height: 20),
+              SignOutButton(user: user)
             ],
           ],
         ),

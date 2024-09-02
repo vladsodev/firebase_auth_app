@@ -1,15 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_app/core/common/error_text.dart';
 import 'package:firebase_auth_app/core/common/loader.dart';
 import 'package:firebase_auth_app/features/auth/controller/auth_controller.dart';
 import 'package:firebase_auth_app/router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth_app/firebase_options.dart';
-import 'package:firebase_auth_app/models/user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-
+//import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 
 
 
@@ -21,6 +19,18 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
+
+
+// class Wrapper extends StatelessWidget {
+//   const Wrapper({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return defaultTargetPlatform == TargetPlatform.windows
+//         ? const MaterialApp(home: MyApp())
+//         : const MyApp();
+//   }
+// }
 
 
 class MyApp extends ConsumerStatefulWidget {
@@ -51,7 +61,15 @@ class _MyAppState extends ConsumerState<MyApp> {
               routerDelegate: RoutemasterDelegate(
                 routesBuilder: (context) {
                   if (data != null && userModel != null) {
-                    return loggedInRoute;
+                    if (userModel.isOperator != null && userModel.isOperator!) {
+                      return operatorRoute;
+                    } else 
+                    if (userModel.isAdmin != null && userModel.isAdmin!) {
+                      return adminRoute;
+                    } else
+                    {
+                      return loggedInRoute;
+                    }
                   } else {
                     return loggedOutRoute;
                   }

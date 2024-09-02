@@ -1,6 +1,12 @@
 //loggedOut
 //loggedIn
 
+import 'package:firebase_auth_app/features/home/screens/admin_screens/admin_menu_screen.dart';
+import 'package:firebase_auth_app/features/home/screens/admin_screens/logs_screen.dart';
+import 'package:firebase_auth_app/features/home/screens/operator_screens/add_drink_screen.dart';
+import 'package:firebase_auth_app/features/home/screens/operator_screens/edit_rotation_screen.dart';
+import 'package:firebase_auth_app/features/home/screens/operator_screens/menu_screen.dart';
+import 'package:firebase_auth_app/features/home/screens/operator_screens/operator_menu.dart';
 import 'package:firebase_auth_app/features/home/screens/user_screens/find_coffee_screen.dart';
 import 'package:firebase_auth_app/features/home/screens/user_screens/home_screen.dart';
 import 'package:firebase_auth_app/features/home/screens/user_screens/order_history_screen.dart';
@@ -11,9 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
 final loggedOutRoute = RouteMap(routes: {
-  // '/signin': (_) => const MaterialPage(child: SignInScreen()),
-  // '/': (_) => const MaterialPage(child: RegisterForm()),
-  //  '/': (_) => const Redirect('/signin'), 
     '/': (_) => const MaterialPage(child: SignInScreen()),
     '/register': (_) => const MaterialPage(child: RegisterForm()),  
 });
@@ -24,3 +27,16 @@ final loggedInRoute = RouteMap(routes: {
   '/userinfo': (_) => const MaterialPage(child: UserInfo()),
   '/orderhistory': (_) => const MaterialPage(child: OrderHistory()),
 });
+
+final operatorRoute = RouteMap(routes: {
+  '/': (_) => const MaterialPage(child: OperatorMenuScreen()),
+  '/editrotation': (_) => const MaterialPage(child: EditRotationScreen()),
+  '/alldrinks': (_) => const MaterialPage(child: MenuScreen()),
+  '/addnewdrink': (_) => const MaterialPage(child: AddDrinkScreen()),
+});
+
+final adminRoute = RouteMap(routes: {
+    '/': (_) => const MaterialPage(child: AdminMenu()),
+    '/viewlogs': (_) => const MaterialPage(child: LogScreen()),
+  }
+);

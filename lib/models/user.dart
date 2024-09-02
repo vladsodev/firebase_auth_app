@@ -23,6 +23,8 @@ class UserModel {
   final String? dateOfBirth;
   final bool isAnonymous;
   final String? timestamp;
+  final bool? isAdmin;
+  final bool? isOperator;
   UserModel({
     required this.uid,
     this.email,
@@ -32,9 +34,10 @@ class UserModel {
     this.dateOfBirth,
     required this.isAnonymous,
     this.timestamp,
+    this.isAdmin,
+    this.isOperator,
   });
-  final bool isAdmin = false;
-  final bool isOperator = false;
+ 
 
   UserModel copyWith({
     String? uid,
@@ -45,6 +48,8 @@ class UserModel {
     String? dateOfBirth,
     bool? isAnonymous,
     String? timestamp,
+    bool? isAdmin,
+    bool? isOperator,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
@@ -55,6 +60,8 @@ class UserModel {
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       isAnonymous: isAnonymous ?? this.isAnonymous,
       timestamp: timestamp ?? this.timestamp,
+      isAdmin: isAdmin ?? this.isAdmin,
+      isOperator: isOperator ?? this.isOperator,
     );
   }
 
@@ -68,6 +75,8 @@ class UserModel {
       'dateOfBirth': dateOfBirth,
       'isAnonymous': isAnonymous,
       'timestamp': timestamp,
+      'isAdmin': isAdmin,
+      'isOperator': isOperator,
     };
   }
 
@@ -90,6 +99,8 @@ class UserModel {
       dateOfBirth: map['dateOfBirth'] != null ? map['dateOfBirth'] as String : null,
       isAnonymous: map['isAnonymous'] as bool,
       timestamp: map['timestamp'] != null ? map['timestamp'] as String : null,
+      isAdmin: map['isAdmin'] != null ? map['isAdmin'] as bool : null,
+      isOperator: map['isOperator'] != null ? map['isOperator'] as bool : null,
     );
   }
 
@@ -99,7 +110,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, dateOfBirth: $dateOfBirth, isAnonymous: $isAnonymous, timestamp: $timestamp)';
+    return 'UserModel(uid: $uid, email: $email, firstName: $firstName, lastName: $lastName, phoneNumber: $phoneNumber, dateOfBirth: $dateOfBirth, isAnonymous: $isAnonymous, timestamp: $timestamp, isAdmin: $isAdmin, isOperator: $isOperator)';
   }
 
   @override
@@ -114,7 +125,9 @@ class UserModel {
       other.phoneNumber == phoneNumber &&
       other.dateOfBirth == dateOfBirth &&
       other.isAnonymous == isAnonymous &&
-      other.timestamp == timestamp;
+      other.timestamp == timestamp &&
+      other.isAdmin == isAdmin &&
+      other.isOperator == isOperator;
   }
 
   @override
@@ -126,6 +139,8 @@ class UserModel {
       phoneNumber.hashCode ^
       dateOfBirth.hashCode ^
       isAnonymous.hashCode ^
-      timestamp.hashCode;
+      timestamp.hashCode ^
+      isAdmin.hashCode ^
+      isOperator.hashCode;
   }
 }
