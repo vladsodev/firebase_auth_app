@@ -55,6 +55,35 @@ final logsProvider = StreamProvider((ref) {
 
 
 
+final allOrdersProvider = StreamProvider((ref) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getOrders;
+});
+
+final newOrdersProvider = StreamProvider((ref) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getNewOrders;
+});
+
+final ordersInProgressProvider = StreamProvider((ref) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getOrdersInProgress;
+});
+
+final completedOrdersProvider = StreamProvider((ref) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getCompletedOrders;
+});
+
+final cancelledOrdersProvider = StreamProvider((ref) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.getCancelledOrders;
+});
+
+
+
+
+
 final userDataProvider = FutureProvider.autoDispose<UserModel?>((ref) async {
   final authState = ref.watch(authStateChangeProvider).value;
   if (authState != null) {
@@ -80,6 +109,17 @@ class AuthController extends StateNotifier<bool>{
   Stream<List<Drink>> get getMenu => _authRepository.getMenu;
 
   Stream<List<Log>> get getLogs => _authRepository.logList; 
+
+
+  Stream<List<VcoffeeOrder>> get getOrders => _authRepository.getOrders;
+
+  Stream<List<VcoffeeOrder>> get getNewOrders => _authRepository.getNewOrders;
+
+  Stream<List<VcoffeeOrder>> get getOrdersInProgress => _authRepository.getOrdersInProgress;
+
+  Stream<List<VcoffeeOrder>> get getCancelledOrders => _authRepository.getCancelledOrders;
+
+  Stream<List<VcoffeeOrder>> get getCompletedOrders => _authRepository.getCompletedOrders;
 
   Stream<List<Drink>> getDrinksFromHistory(String uid) => _authRepository.getDrinksFromHistory(uid);
 
@@ -156,5 +196,18 @@ class AuthController extends StateNotifier<bool>{
   void addNewDrink(String uid, Drink drink) async {
     return _authRepository.addNewDrink(uid, drink);
   }
+
+  void acceptOrder(VcoffeeOrder order) {
+    _authRepository.acceptOrder(order);
+  }
+
+  void cancelOrder(VcoffeeOrder order) {
+    _authRepository.cancelOrder(order);
+  }
+
+  void finishOrder(VcoffeeOrder order) {
+    _authRepository.finishOrder(order);
+  }
+
 
 }

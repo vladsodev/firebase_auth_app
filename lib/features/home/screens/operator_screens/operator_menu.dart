@@ -32,14 +32,71 @@ class _OperatorMenuScreenState extends ConsumerState<OperatorMenuScreen> {
                 onPressed: () {
                   Routemaster.of(context).push('/editrotation');
                 }, 
-                child: const Text('Edit Rotation')
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+                ),
+                child: const Text('Edit Rotation'),
+                
               ),
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
                   Routemaster.of(context).push('/alldrinks');
                 }, 
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+                ),
                 child: const Text('View All Drinks')
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Routemaster.of(context).push('/neworders');
+                }, 
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+                ),
+                child: const Text('View new Orders')
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Routemaster.of(context).push('/ordersinprogress');
+                }, 
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+                ),
+                child: const Text('View orders in progress')
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Routemaster.of(context).push('/completedorders');
+                }, 
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+                ),
+                child: const Text('View completed orders')
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Routemaster.of(context).push('/cancelledorders');
+                }, 
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+                ),
+                child: const Text('View cancelled orders')
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  Routemaster.of(context).push('/allorderhistory');
+                }, 
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+                ),
+                child: const Text('View order history')
               ),
               const SizedBox(height: 30),
               SignOutButton(user: user),

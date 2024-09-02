@@ -36,7 +36,7 @@ class AuthRepository {
   CollectionReference get _ordersInProgress => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('orders_in_progress');
   CollectionReference get _completedOrders => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('completed_orders');
   CollectionReference get _cancelledOrders => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('cancelled_orders');
-  CollectionReference get _newOrders => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('orders_in_progress');
+  CollectionReference get _newOrders => _firestore.collection(FirebaseConstants.orders).doc('vcoffee_orders').collection('new_orders');
 
   Stream<User?> get authStateChanges {
     return _auth.authStateChanges();
@@ -211,34 +211,28 @@ class AuthRepository {
   // }
 
   Future orderDrink(String uid, Drink drink) async {
+    final order = VcoffeeOrder(name: drink.name, price: drink.price, timestamp: DateTime.now().toString(), buyer: uid);
     await addLogOnOrder(uid, drink);
-    await _users.doc(uid).collection('history').doc(DateTime.now().toString()).set(drink.toMap());
-    await _allOrders.doc(DateTime.now().toString()).set({
-      ...drink.toMap(),
-      'timestamp': DateTime.now().toString(),
-      'buyer': uid
-    });
-    await _newOrders.doc(DateTime.now().toString()).set({
-      ...drink.toMap(),
-      'timestamp': DateTime.now().toString(),
-      'buyer': uid
-    });
+    await _users.doc(uid).collection('history').doc(order.timestamp).set({...drink.toMap(), 'timestamp': order.timestamp});
+    await _allOrders.doc(order.timestamp).set(order.toMap());
+    await _newOrders.doc(order.timestamp).set(order.toMap());
   }
 
-  Future acceptOrder(String uid, Drink drink) async {
-    await _ordersInProgress.doc(DateTime.now().toString()).set({
-      ...drink.toMap(),
-      'timestamp': DateTime.now().toString(),
-      'buyer': uid
-    });
+  Future acceptOrder(VcoffeeOrder order) async {
+    await _ordersInProgress.doc(order.timestamp).set(order.toMap());
+    await _newOrders.doc(order.timestamp).delete();
   }
 
-  Future cancelOrder(String uid, Drink drink) async {
-    await _cancelledOrders.doc(DateTime.now().toString()).set({
-      ...drink.toMap(),
-      'timestamp': DateTime.now().toString(),
-      'buyer': uid
-    });
+// здесь могут быть проблемы
+  Future cancelOrder(VcoffeeOrder order) async {
+    await _cancelledOrders.doc(order.timestamp).set(order.toMap());
+    await _newOrders.doc(order.timestamp).delete();
+    await _ordersInProgress.doc(order.timestamp).delete();
+  }
+
+  Future finishOrder(VcoffeeOrder order) async {
+    await _completedOrders.doc(order.timestamp).set(order.toMap());
+    await _ordersInProgress.doc(order.timestamp).delete();
   }
 
   // Future addDrinkToRotation(Map<String, dynamic> selectedProduct) async {
@@ -367,7 +361,37 @@ class AuthRepository {
     });
   }
 
-  
+  Stream<List<VcoffeeOrder>> get getOrders {
+    return _allOrders.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => VcoffeeOrder.fromFirestore(doc)).toList();
+    });
+  }
+
+  Stream<List<VcoffeeOrder>> get getNewOrders {
+    return _newOrders.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => VcoffeeOrder.fromFirestore(doc)).toList();
+    });
+  }
+
+  Stream<List<VcoffeeOrder>> get getOrdersInProgress {
+    return _ordersInProgress.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => VcoffeeOrder.fromFirestore(doc)).toList();
+    });
+  }
+
+  Stream<List<VcoffeeOrder>> get getCompletedOrders {
+    return _completedOrders.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => VcoffeeOrder.fromFirestore(doc)).toList();
+    });
+  }
+
+  Stream<List<VcoffeeOrder>> get getCancelledOrders {
+    return _cancelledOrders.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => VcoffeeOrder.fromFirestore(doc)).toList();
+    });
+  }
+
+
 
 
 

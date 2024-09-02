@@ -28,6 +28,9 @@ class _AdminMenuState extends ConsumerState<AdminMenu> {
                 onPressed: () {
                   Routemaster.of(context).push('/viewlogs');
                 },
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(double.infinity, 25))
+                ),
                 child: const Text('View Logs'),
               ),
               SignOutButton(user: user)

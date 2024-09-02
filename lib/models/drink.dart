@@ -3,13 +3,13 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Order {
+class VcoffeeOrder {
   int? id;
   final String name;
   final double price;
-  DateTime timestamp;
+  String timestamp;
   String buyer;
-  Order({
+  VcoffeeOrder({
     this.id,
     required this.name,
     required this.price,
@@ -17,14 +17,14 @@ class Order {
     required this.buyer,
   });
 
-  Order copyWith({
+  VcoffeeOrder copyWith({
     int? id,
     String? name,
     double? price,
-    DateTime? timestamp,
+    String? timestamp,
     String? buyer,
   }) {
-    return Order(
+    return VcoffeeOrder(
       id: id ?? this.id,
       name: name ?? this.name,
       price: price ?? this.price,
@@ -38,35 +38,35 @@ class Order {
       'id': id,
       'name': name,
       'price': price,
-      'timestamp': timestamp.millisecondsSinceEpoch,
+      'timestamp': timestamp,
       'buyer': buyer,
     };
   }
 
-  factory Order.fromFirestore(DocumentSnapshot doc) {
+  factory VcoffeeOrder.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return Order(
+    return VcoffeeOrder(
       id: data['id'],
       name: data['name'],
       price: data['price'],
-      timestamp: data['timestamp'].toDate(),
+      timestamp: data['timestamp'],
       buyer: data['buyer'],
     );
   }
 
-  factory Order.fromMap(Map<String, dynamic> map) {
-    return Order(
+  factory VcoffeeOrder.fromMap(Map<String, dynamic> map) {
+    return VcoffeeOrder(
       id: map['id'] != null ? map['id'] as int : null,
       name: map['name'] as String,
       price: map['price'] as double,
-      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
+      timestamp: map['timestamp'] as String,
       buyer: map['buyer'] as String,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Order.fromJson(String source) => Order.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory VcoffeeOrder.fromJson(String source) => VcoffeeOrder.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -74,7 +74,7 @@ class Order {
   }
 
   @override
-  bool operator ==(covariant Order other) {
+  bool operator ==(covariant VcoffeeOrder other) {
     if (identical(this, other)) return true;
   
     return 
