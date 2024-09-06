@@ -20,7 +20,7 @@ class EncryptData {
     // Получение времени выполнения в миллисекундах
     int elapsedMilliseconds = stopwatch.elapsedMilliseconds;
 
-    print('Время выполнения функции шифрования: $elapsedMilliseconds миллисекунд');
+    //print('Время выполнения функции шифрования: $elapsedMilliseconds миллисекунд');
     return encrypted.base64;
   }
 
@@ -35,7 +35,7 @@ class EncryptData {
     // Получение времени выполнения в миллисекундах
     int elapsedMilliseconds = stopwatch.elapsedMilliseconds;
 
-    print('Время выполнения функции дешифрования: $elapsedMilliseconds миллисекунд');
+    //print('Время выполнения функции дешифрования: $elapsedMilliseconds миллисекунд');
     return decrypted;
   }
 

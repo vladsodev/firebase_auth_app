@@ -1,6 +1,7 @@
 import 'package:firebase_auth_app/services/auth.dart';
 import 'package:flutter/material.dart';
 
+
 class SignIn extends StatefulWidget {
   final Function toggleView;
   
@@ -18,19 +19,24 @@ class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
+  
+  
   // textfield state
   String email = '';
   String password = '';
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign in to V-points'),
+        title: const Text('Sign in to V-coffee'),
         actions: [
           TextButton.icon(
-            icon: const Icon(Icons.person_2, color: Colors.white),
-            label: const Text('Register', style: TextStyle(color: Colors.white)),
+            icon: const Icon(Icons.person_2),
+            label: const Text('Register'),
             onPressed: () {
               widget.toggleView();
             }
