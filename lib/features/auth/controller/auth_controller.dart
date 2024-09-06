@@ -6,6 +6,7 @@ import 'package:firebase_auth_app/features/auth/repo/auth_repository.dart';
 import 'package:firebase_auth_app/models/user.dart';
 import 'package:firebase_auth_app/utils/show_snack_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 final userProvider = StateProvider<UserModel?>((ref) => null);
 
@@ -139,7 +140,10 @@ class AuthController extends StateNotifier<bool>{
     state = true;
     final user = await _authRepository.signUpWithEmail(email, password);
     state = false;
-    user.fold((l) => showSnackBar(context, l.message), (userModel) => _ref.read(userProvider.notifier).update((state) => userModel));
+    user.fold((l) => showSnackBar(context, l.message), (userModel) {
+      Routemaster.of(context).push('/');
+      _ref.read(userProvider.notifier).update((state) => userModel);
+      });
   }
 
 

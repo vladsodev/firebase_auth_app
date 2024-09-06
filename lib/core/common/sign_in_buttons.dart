@@ -17,7 +17,7 @@ class SignUpButton extends ConsumerWidget {
   void signUpWithEmailAndPassword(String email, String password, BuildContext context, WidgetRef ref) {
 
     ref.read(authControllerProvider.notifier).signUpWithEmail(email, password, context);
-    Routemaster.of(context).push('/');
+    
   }
 
 

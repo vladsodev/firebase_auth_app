@@ -48,7 +48,7 @@ class VcoffeeOrder {
     return VcoffeeOrder(
       id: data['id'],
       name: data['name'],
-      price: data['price'],
+      price: (data['price'] as num).toDouble(), // Преобразование в double
       timestamp: data['timestamp'],
       buyer: data['buyer'],
     );
@@ -161,7 +161,7 @@ class Drink {
       id: data['id'],
       name: data['name'],
       description: data['description'],
-      price: data['price'],
+      price: (data['price'] as num).toDouble(),
       cold: data['cold'],
       milky: data['milky'],
       sweet: data['sweet'],

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth_app/core/common/error_text.dart';
 import 'package:firebase_auth_app/core/common/image_urls.dart';
 import 'package:firebase_auth_app/core/common/loader.dart';
@@ -62,11 +64,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       body: userData.when(
         data: (userData) {
           print('current user $userData');
+          final historyList = ref.watch(drinkHistoryProvider(userData!.uid));
           return drinkList.when(
             data: (drinkList) {
               return SafeArea(
                 child: Column(
                   children: [
+                    historyList.when(
+                      data: (data) {
+                        if (data.isEmpty) {
+                          return const Text('No special offers yet!');
+                        }
+                        final rand = Random();
+                        final randomDrink = data[rand.nextInt(data.length)];
+                        return Column(
+                          children: [
+                            const Text('Special for you!'),
+                            ProductCard(
+                              name: randomDrink.name, 
+                              description: randomDrink.description,
+                              price: randomDrink.price, 
+                              image: ImageUrls.coffeeCup, 
+                              backgroundColor: const Color.fromARGB(255, 247, 149, 149),
+                            ),
+                          ],
+                        );
+                      },
+                      error: (error, stackTrace) => ErrorText(error: error.toString()),
+                      loading: () => const Loader(),
+                    ),
                     Expanded(
                       child: LayoutBuilder(
                         builder: (context, constraints) {

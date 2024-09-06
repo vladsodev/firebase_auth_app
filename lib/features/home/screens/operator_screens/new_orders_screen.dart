@@ -33,6 +33,7 @@ class _NewOrdersScreenState extends ConsumerState<NewOrdersScreen> {
 
           return orderList.when(
             data: (orderList) {
+              print(orderList[0].price);
               return SafeArea(
                 child: Column(
                   children: [
