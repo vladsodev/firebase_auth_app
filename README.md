@@ -1,5 +1,4 @@
-# firebase_auth_app
+# vcoffee_app
 
-Flutter + Firebase project. Uses firebase_auth to log in and to register new users and cloud_firestore to add encrypted logs.
-Admin can sign up an see decrypted and separated by levels logs.
+Клиентское приложение доступа к данным информационной системы сопровождения ресторанного бизнеса. разработано в рамках курсовой работы.
 
