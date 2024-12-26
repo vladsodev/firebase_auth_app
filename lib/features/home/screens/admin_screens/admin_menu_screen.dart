@@ -2,6 +2,7 @@ import 'package:firebase_auth_app/core/common/error_text.dart';
 import 'package:firebase_auth_app/core/common/loader.dart';
 import 'package:firebase_auth_app/core/common/sign_in_buttons.dart';
 import 'package:firebase_auth_app/features/auth/controller/auth_controller.dart';
+import 'package:firebase_auth_app/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -19,6 +20,8 @@ class _AdminMenuState extends ConsumerState<AdminMenu> {
 
   Widget build(BuildContext context) {
 
+    print('adminroute');
+
     final user = ref.watch(userDataProvider);
     
     return Scaffold(
@@ -33,6 +36,7 @@ class _AdminMenuState extends ConsumerState<AdminMenu> {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    sendApiLog('Admin ${user!.email} viewed logs');
                     Routemaster.of(context).push('/viewlogs');
                   },
                   style: ButtonStyle(

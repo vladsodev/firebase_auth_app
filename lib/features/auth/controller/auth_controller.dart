@@ -1,5 +1,6 @@
 import 'package:firebase_auth_app/models/drink.dart';
 import 'package:firebase_auth_app/models/log.dart';
+import 'package:firebase_auth_app/services/api.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_app/features/auth/repo/auth_repository.dart';
@@ -184,6 +185,7 @@ class AuthController extends StateNotifier<bool>{
     _authRepository.updateUserData(user);
     _ref.read(latestUserDataProvider.notifier).update((state) => user);
     showSnackBar(context, 'Succesfully updated!');
+    //sendApiLog('User ${user.email} data updated');
   }
 
   void orderDrink(UserModel user, Drink? drink, BuildContext context) {
@@ -195,15 +197,16 @@ class AuthController extends StateNotifier<bool>{
     } else {
     _authRepository.orderDrink(user.uid, drink);
     showSnackBar(context, 'Ordered!');
+    sendApiLog('User ${user.email} ordered ${drink.name} with id ${drink.id}');
     }
   }
 
-  void removeDrinkFromRotation(Drink drink) {
-    _authRepository.removeDrinkFromRotation(drink);
+  void removeDrinkFromRotation(String uid, Drink drink) {
+    _authRepository.removeDrinkFromRotation(uid, drink);
   }
 
-  void addDrinkToRotation(Drink drink) {
-    _authRepository.addDrinkToRotationBetter(drink);
+  void addDrinkToRotation(String uid, Drink drink) {
+    _authRepository.addDrinkToRotationBetter(uid, drink);
   }
 
   Future<int> getNextId() {

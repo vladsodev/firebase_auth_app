@@ -70,7 +70,7 @@ class _EditRotationScreenState extends ConsumerState<EditRotationScreen> {
                                             ),
                                             child: const Text('Remove from rotation'),
                                             onPressed: () {
-                                              ref.read(authControllerProvider.notifier).removeDrinkFromRotation(product);
+                                              ref.read(authControllerProvider.notifier).removeDrinkFromRotation(user!.uid, product);
                                               Navigator.of(context).pop();
                                             },
                                           ),
@@ -124,7 +124,7 @@ class _EditRotationScreenState extends ConsumerState<EditRotationScreen> {
                                             ),
                                             child: const Text('Remove from rotation'),
                                             onPressed: () {
-                                              ref.read(authControllerProvider.notifier).removeDrinkFromRotation(product);
+                                              ref.read(authControllerProvider.notifier).removeDrinkFromRotation(user!.uid, product);
                                               Navigator.of(context).pop();
                                             },
                                           ),

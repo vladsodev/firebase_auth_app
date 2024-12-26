@@ -2,6 +2,7 @@ import 'package:firebase_auth_app/core/common/error_text.dart';
 import 'package:firebase_auth_app/core/common/loader.dart';
 import 'package:firebase_auth_app/features/auth/controller/auth_controller.dart';
 import 'package:firebase_auth_app/router.dart';
+import 'package:firebase_auth_app/services/api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,7 @@ void main() async {
   );
   runApp(const ProviderScope(child: MaterialApp(home: MyApp(),debugShowCheckedModeBanner: false,)));
 }
+
 
 
 
@@ -43,6 +45,7 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
+    //sendApiLog('access to app');
     return ref.watch(authStateChangeProvider).when(
       data: (data) {
         final userData = ref.watch(userDataProvider);
@@ -64,6 +67,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                       return operatorRoute;
                     } else 
                     if (userModel.isAdmin != null && userModel.isAdmin!) {
+                      print('admin route');
                       return adminRoute;
                     } else
                     {

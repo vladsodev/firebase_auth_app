@@ -70,7 +70,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                                             ),
                                             child: const Text('Remove from rotation'),
                                             onPressed: () {
-                                              ref.read(authControllerProvider.notifier).addDrinkToRotation(product);
+                                              ref.read(authControllerProvider.notifier).addDrinkToRotation(user!.uid, product);
                                               Navigator.of(context).pop();
                                             },
                                           ),
@@ -124,7 +124,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
                                             ),
                                             child: const Text('Add drink to rotation'),
                                             onPressed: () {
-                                              ref.read(authControllerProvider.notifier).addDrinkToRotation(product);
+                                              ref.read(authControllerProvider.notifier).addDrinkToRotation(user!.uid, product);
                                               Navigator.of(context).pop();
                                             },
                                           ),
